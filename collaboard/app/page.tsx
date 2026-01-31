@@ -1,6 +1,6 @@
 "use client"
 
-import { Authenticated, AuthLoading, Unauthenticated } from "convex/react";
+import { Authenticated, Unauthenticated, AuthLoading } from "convex/react";
 import { SignInButton, UserButton } from "@clerk/nextjs";
 
 export default function Home() {
@@ -21,9 +21,6 @@ export default function Home() {
         <SignInButton />
       </Unauthenticated>
 
-      <AuthLoading>
-        <div>Loading...</div>
-      </AuthLoading>
     </>
   );
-}
+};

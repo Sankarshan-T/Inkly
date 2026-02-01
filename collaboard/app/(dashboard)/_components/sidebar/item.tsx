@@ -6,6 +6,7 @@ import {
     useOrganizationList
 } from "@clerk/nextjs";
 import { cn } from "@/lib/utils";
+import { Hint } from "@/components/hint";
 
 interface ItemProps {
     id: string;
@@ -32,16 +33,18 @@ export const Item = ({
 
     return(
         <div className="aspect-square relative">
-            <Image
-            fill
-            alt="name"
-            src={imageUrl}
-            onClick={onClick}
-            className={cn(
-                "rounded-md cursor-pointer opacity-55 hover:opacity-100 transition",
-                isActive && "opacity-100"
-            )}      
-            />
-        </div>
+        <Hint label={name} side="right" align="start" sideOffset={8} alignOffset={5}>
+                <Image
+                fill
+                alt="name"
+                src={imageUrl}
+                onClick={onClick}
+                className={cn(
+                    "rounded-md cursor-pointer opacity-55 hover:opacity-100 transition",
+                    isActive && "opacity-100"
+                )}      
+                />
+        </Hint> 
+        </div>       
     );
 }

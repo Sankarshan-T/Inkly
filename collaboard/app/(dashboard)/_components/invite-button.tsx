@@ -19,7 +19,7 @@ export const InviteButton = () => {
             </Button>
         </DialogTrigger>
         <DialogContent style={{maxWidth: "none", width: "fit-content"}} className="p-0 bg-transparent border-none">
-            <OrganizationProfile routing="hash" />
+            <OrganizationProfile routing="hash"/>
         </DialogContent>
     </Dialog>
   )

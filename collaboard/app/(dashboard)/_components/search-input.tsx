@@ -23,8 +23,6 @@ export const SearchInput = () => {
     };
 
     useEffect(() => {
-        const query = debounceValue ? { search: debounceValue } : {};
-        console.log("debounce = ", debounceValue);
         const url = qs.stringifyUrl({
                 url: "/",
                 query: debounceValue[0] ? { search: debounceValue[0] } : {},

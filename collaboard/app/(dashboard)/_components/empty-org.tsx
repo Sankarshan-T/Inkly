@@ -14,9 +14,8 @@ export const EmptyOrg = () => {
         <Image
             src={"/elements.svg"}
             alt="empty"
-            height={200}
-            width={200}
-            className="opacity-70"
+            height={250}
+            width={250}
         />
         <h2 className="text-2xl font-semibold mt-6">Welcome to Inkly!</h2>
         <p className="text-muted-foreground text-sm mt-2">

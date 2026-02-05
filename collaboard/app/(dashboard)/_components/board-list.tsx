@@ -2,6 +2,7 @@
 
 import { EmptySearch } from "./empty-search";
 import { EmptyFavorites } from "./empty-favorites";
+import { EmptyBoards } from "./empty-boards";
 
 interface BoardListProps {
     orgId: string;
@@ -26,10 +27,6 @@ export const BoardList = ({
     }
 
     if (!data?.length) {
-        return(
-            <div>
-                You dont have any boards now.
-            </div>
-        );
+        return <EmptyBoards />
     }
 };

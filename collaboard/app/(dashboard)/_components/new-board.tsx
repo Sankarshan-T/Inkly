@@ -35,7 +35,7 @@ export const NewBoard = ({
             disabled={pending || disabled}
             onClick={onClick}
             className={cn(
-                "col-span-1 aspect-100/127 bg-blue-500 rounded-lg hover:bg-blue-700 flex flex-col items-center justify-center py-6", (pending || disabled) && "opacity-25"
+                "col-span-1 aspect-100/127 bg-blue-500 rounded-lg hover:bg-blue-700 flex flex-col items-center justify-center py-6", (pending || disabled) && "opacity-25 hover:bg-blue-500 cursor-not-allowed"
             )}>
             <div />
             <Plus className="h-15 w-15 stroke-2 text-white"/>

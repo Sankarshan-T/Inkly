@@ -13,6 +13,8 @@ import {
 import { Link2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/convex/_generated/api";
+import { ConfirmationBox } from "./confirmation-box";
+import { Button } from "./ui/button";
 
 interface ActionsProps {
     children: React.ReactNode;
@@ -55,14 +57,21 @@ export const Actions = ({
                 <Link2 className="h-4 w-4 mr-2 " />
                 Copy board link
             </DropdownMenuItem>
-
-            <DropdownMenuItem
-                onClick={remove}
-                className="p-3 cursor-pointer"
+            <ConfirmationBox
+                header="Delete board?"
+                description="Delete this board and all of its content? This action is irreversible"
+                disabled={pending}
+                onConfirm={remove}
             >
-                <Trash2 className="h-4 w-4 mr-2 " />
-                Delete
-            </DropdownMenuItem>
+                <Button
+                    variant={"ghost"}
+                    className="p-3 cursor-pointer text-sm w-full justify-start font-normal"
+                >
+                    <Trash2 className="h-4 w-4 mr-2 " />
+                    Delete
+                </Button>
+            </ConfirmationBox>
+            
         </DropdownMenuContent>
     </DropdownMenu>
   );

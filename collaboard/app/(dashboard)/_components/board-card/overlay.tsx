@@ -11,6 +11,7 @@ export const Overlay = () => {
           z-10
           w-full
           h-full
+          pointer-events-none
         "
       />
     );

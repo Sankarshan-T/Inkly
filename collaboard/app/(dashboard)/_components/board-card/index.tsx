@@ -39,10 +39,9 @@ export const BoardCard = ({
                         src={imageUrl}
                         alt="board"
                         fill
-                        className="object-fit"
+                        className="object-fit p-2"
                     />
 
-                    {/* <Clipboard className="h-full w-full p-5" /> */}
                     <Overlay /> 
                     <Actions
                         id={id}

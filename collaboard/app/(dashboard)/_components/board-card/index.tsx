@@ -8,6 +8,7 @@ import { Footer } from "./footer";
 import { Clipboard, MoreHorizontal } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Actions } from "@/components/actions";
+import Image from "next/image";
 
 interface BoardCardProps {
     id: string;
@@ -15,13 +16,13 @@ interface BoardCardProps {
     authorname: string;
     authorId: string;
     createdAt: number;
-    // imageUrl: string;
+    imageUrl: string;
     orgId: string;
     isFavorite: boolean;
 }
 
 export const BoardCard = ({
-    id, title, authorname, authorId, createdAt, orgId, isFavorite,
+    id, title, authorname, authorId, createdAt, orgId, isFavorite, imageUrl
 }: BoardCardProps) => {
     const { userId } = useAuth();
 
@@ -34,7 +35,14 @@ export const BoardCard = ({
         <Link href={`/board/${id}`} className="group">
             <div className="group aspect-100/127 border rounded-lg overflow-hidden flex flex-col justify-between">
                 <div className="h-full w-full relative flex-1 bg-blue-300">
-                    <Clipboard className="h-full w-full p-5" />
+                    <Image
+                        src={imageUrl}
+                        alt="board"
+                        fill
+                        className="object-fit"
+                    />
+
+                    {/* <Clipboard className="h-full w-full p-5" /> */}
                     <Overlay /> 
                     <Actions
                         id={id}

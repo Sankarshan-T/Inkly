@@ -10,11 +10,12 @@ import {
     DropdownMenuItem,
     DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
-import { Link2, Trash2 } from "lucide-react";
+import { Link2, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/convex/_generated/api";
 import { ConfirmationBox } from "./confirmation-box";
 import { Button } from "./ui/button";
+import { useRenameModal } from "@/store/use-renamemodal";
 
 interface ActionsProps {
     children: React.ReactNode;
@@ -32,6 +33,8 @@ export const Actions = ({
     title
 }: ActionsProps) => {
     const { mutate, pending } = useApiMutation(api.board.remove);
+
+    const { onOpen } = useRenameModal();
 
 
     const copyLink = () => {
@@ -71,6 +74,14 @@ export const Actions = ({
                     Delete
                 </Button>
             </ConfirmationBox>
+
+            <DropdownMenuItem
+                onClick={() => onOpen(id, title)}
+                className="p-3 cursor-pointer"
+            >
+                <Pencil className="h-4 w-4 mr-2 " />
+                Rename
+            </DropdownMenuItem>
             
         </DropdownMenuContent>
     </DropdownMenu>

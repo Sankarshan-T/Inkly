@@ -11,6 +11,7 @@
   "dependencies": {
     "@clerk/nextjs": "^6.37.0",
     "@liveblocks/client": "^3.13.5",
+    "@liveblocks/node": "^3.13.5",
     "@liveblocks/react": "^3.13.5",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-slot": "^1.2.4",

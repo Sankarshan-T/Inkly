@@ -1,4 +1,5 @@
 import { Canvas } from "./_components/canvas";
+import { Loading } from "./_components/loading";
 import { Room } from "./_components/room";
 
 interface BoardIdPageProps {
@@ -15,7 +16,7 @@ const BoardIdPage = async ({
     if (!boardId) return null;
 
     return (
-        <Room roomId={boardId}>
+        <Room roomId={boardId} fallback={<Loading />}>
             <Canvas boardId={boardId} />
         </Room>
     );

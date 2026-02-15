@@ -24,10 +24,12 @@ export const NewBoard = ({
         })
         .then((id) => {
             toast.success("Board Created!");
+            window.location.href = `/board/${id}`
         })
         .catch(() => {
             toast.error("Failed to create board");
         })
+        
     }
 
     return(

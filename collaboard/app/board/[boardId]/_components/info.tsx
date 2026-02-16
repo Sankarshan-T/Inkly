@@ -1,13 +1,97 @@
-export const Info = () => {
-    return(
+"use client";
+
+import { Actions } from "@/components/actions";
+import { Hint } from "@/components/hint";
+import { Button } from "@/components/ui/button";
+import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
+import { cn } from "@/lib/utils";
+import { useRenameModal } from "@/store/use-renamemodal";
+import { useQuery } from "convex/react";
+import { Menu } from "lucide-react";
+import { Poppins } from "next/font/google";
+import Image from "next/image";
+import Link from "next/link";
+
+interface InfoProps {
+    boardId: string;
+};
+
+const font = Poppins({
+    subsets: ["latin"],
+    weight: ["600"],
+});
+
+const Separator = () => {
+    return (
+        <div className="text-neutral-300 text-2xl px-1.5 py-0 leading-0">
+            |
+        </div>
+    )
+}
+
+export const Info = ({
+    boardId,
+}: InfoProps) => {
+    const { onOpen } = useRenameModal();
+
+    const data = useQuery(api.board.get, {
+        id: boardId as Id<"boards">,
+    });
+
+    if (!data) return <InfoSkeleton />;
+
+    return (
         <div className="absolute top-2 left-2 bg-white rounded-md px-1.5 h-12 flex items-center shadow-md">
-            Info about the board! (Board name...)
+            <Hint label="All Boards" side="bottom" sideOffset={10}>
+                <Button asChild className="px-2" variant={"board"}>
+                    <Link href={"/"}>
+                        <Image
+                            src={"/logo.svg"}
+                            alt="Board Logo"
+                            height={30}
+                            width={30}
+                        />
+                        <span className={cn(
+                            "font-semibold text-2xl ml-2 text-black",
+                            font.className,
+                        )}>
+                            Inkly
+                        </span>
+                    </Link>
+                </Button>
+            </Hint>
+            <Separator />
+            <Hint label="Edit board title" side="bottom" sideOffset={10}>
+                <Button
+                    variant={"board"}
+                    className="text-base font-normal px-2"
+                    onClick={() => onOpen(data._id, data.title)}
+                >
+                    {data.title}
+                </Button>
+            </Hint>
+            <Separator />
+            <Actions
+                id={data._id}
+                title={data.title}
+                side="bottom"
+                sideOffset={10}
+            >
+                <div>
+                    <Hint label="Main menu" side="bottom" sideOffset={10}>
+                        <Button size={"icon"} variant={"board"}>
+                            <Menu />
+                        </Button>
+                    </Hint>
+                </div>
+            </Actions>
         </div>
     );
 };
 
-Info.Skeleton = function InfoSkeleton() {
-    return(
+export const InfoSkeleton = () => {
+    return (
         <div
             className="absolute top-2 left-2 bg-white rounded-md px-1.5 h-12 flex items-center shadow-md w-75"
         />

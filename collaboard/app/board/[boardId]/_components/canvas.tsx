@@ -14,6 +14,7 @@ import { mutation } from "@/convex/_generated/server";
 import { LiveObject } from "@liveblocks/client";
 import { LayerPreview } from "./layer-preview";
 import { SelectionBox } from "./selection-box";
+import { SelectionTools } from "./selection-tools";
 
 const MAX_LAYERS = 100;
 
@@ -32,9 +33,9 @@ export const Canvas = ({
 
     const [camera, setCamera] = useState<Camera>({ x: 0, y: 0 });
     const [lastUsedColor, setLastUsedColor] = useState<Color>({
-        r: 100,
-        g: 49,
-        b: 201,
+        r: 25,
+        g: 114,
+        b: 120,
     });
 
     const history = useHistory();
@@ -251,6 +252,10 @@ export const Canvas = ({
                 canUndo={canUndo}
                 undo={history.undo}
                 redo={history.redo}
+            />
+            <SelectionTools
+                camera={camera}
+                setLastUsedColor={setLastUsedColor}
             />
             <svg
                 className="h-screen w-screen"

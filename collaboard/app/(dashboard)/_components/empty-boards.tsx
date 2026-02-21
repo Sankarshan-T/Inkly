@@ -21,6 +21,7 @@ export const EmptyBoards = () => {
         })
         .then((id) => {
             toast.success("Board Created!");
+            window.location.href = `/board/${id}`
         })
         .catch(() => toast.error("Failed to create Board."));
     };

@@ -80,7 +80,7 @@ export const Canvas = ({
         const offset = {
             x: point.x - canvasState.current.x,
             y: point.y - canvasState.current.y
-        };
+        };        
 
         const liveLayers = storage.get("layers");
 
@@ -93,6 +93,7 @@ export const Canvas = ({
                     y: layer.get("y") + offset.y,
                 });
             };
+            
         }
 
         setCanvasState({ mode: CanvasMode.Translating, current: point });
@@ -103,7 +104,7 @@ export const Canvas = ({
         { self, setMyPresence }
     ) => {
         if (self.presence.selection.length > 0) {
-            setMyPresence({ selection: [] }, {addToHistory: true}); 
+            setMyPresence({ selection: [] }, { addToHistory: true });
         }
     }, []);
 
@@ -117,12 +118,12 @@ export const Canvas = ({
             canvasState.initialBounds,
             canvasState.corner,
             point,
-        );  
+        );
 
         const liveLayers = storage.get("layers");
         const layer = liveLayers.get(self.presence.selection[0]);
 
-        if(layer) {
+        if (layer) {
             layer.update(bounds);
         };
     }, [canvasState]);
@@ -175,13 +176,13 @@ export const Canvas = ({
     }, [camera, canvasState.mode, setCanvasState,]);
 
     const onPointerUp = useMutation((
-        {},
+        { },
         e
     ) => {
         const point = pointerEventToCanvasPoint(e, camera);
 
         if (
-            canvasState.mode === CanvasMode.None || 
+            canvasState.mode === CanvasMode.None ||
             canvasState.mode === CanvasMode.Pressing
         ) {
             unselectLayers();
@@ -267,7 +268,7 @@ export const Canvas = ({
             >
                 <g
                     style={{
-                        transform: `translate(${camera.x}, ${camera.y}px)`
+                        transform: `translate(${camera.x}, ${camera.y}px)`,
                     }}
                 >
                     {layerIds?.map((layerId) => (

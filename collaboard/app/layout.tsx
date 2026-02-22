@@ -32,14 +32,18 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ClerkProvider>
+        <ClerkProvider appearance={{
+          layout: {
+            unsafe_disableDevelopmentModeWarnings: true,
+          },
+        }}>
           <ConvexClientProvider>
             <Toaster />
             <ModalProvider />
             {children}
           </ConvexClientProvider>
-        </ClerkProvider>     
-        
+        </ClerkProvider>
+
       </body>
     </html>
   );

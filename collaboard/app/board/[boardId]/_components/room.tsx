@@ -10,6 +10,7 @@ import {
 } from "@liveblocks/react/suspense";
 import { LiveList, LiveMap, LiveObject } from "@liveblocks/client";
 import { Layer } from "@/types/canvas";
+import { RedirectToSignIn } from "@clerk/nextjs";
 
 interface RoomProps {
     children: ReactNode;
@@ -17,10 +18,10 @@ interface RoomProps {
     fallback: NonNullable<ReactNode> | null;
 }
 
-const RoomGuard = ({ children, fallback }: { children: ReactNode, fallback: ReactNode }) => {
+const RoomGuard = ({ children }: { children: ReactNode, fallback: ReactNode }) => {
     const status = useStatus();
     if (status === "disconnected") {
-        return <>{fallback}</>;
+        return <RedirectToSignIn/>
     }
 
     return <>{children}</>;

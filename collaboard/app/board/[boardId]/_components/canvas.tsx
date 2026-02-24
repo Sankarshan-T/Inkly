@@ -6,7 +6,7 @@ import { Participants } from "./participants";
 import { nanoid } from "nanoid";
 
 import { useHistory, useCanUndo, useCanRedo, useMutation, useStorage, useOthersMapped, useSelf } from "@liveblocks/react";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { CanvasState, CanvasMode, Camera, Color, LayerType, Point, Side, XYWH } from "@/types/canvas";
 import { CursorsPresence } from "./cursors-presence";
 import { colorToCss, connectionIdToColor, findIntersectingLayersWithRectangle, penPointsToPath, pointerEventToCanvasPoint, resizeBounds } from "@/lib/utils";
@@ -16,6 +16,8 @@ import { LayerPreview } from "./layer-preview";
 import { SelectionBox } from "./selection-box";
 import { SelectionTools } from "./selection-tools";
 import { Path } from "./path";
+import { useDisableScrollBounds } from "@/hooks/use-disable-scroll-bounds";
+import { useDeleteLayers } from "@/hooks/use-delete-layers";
 
 const MAX_LAYERS = 100;
 
@@ -41,6 +43,9 @@ export const Canvas = ({
         g: 114,
         b: 120,
     });
+
+
+    useDisableScrollBounds();
 
     const history = useHistory();
     const canUndo = useCanUndo();
@@ -371,6 +376,36 @@ export const Canvas = ({
 
         return layerIdsToColorSelection;
     }, [selections])
+
+    const deleteLayers = useDeleteLayers();
+
+    useEffect(() => {
+        function onKeyDown(e: KeyboardEvent) {
+            const isTyping =
+                (document.activeElement as HTMLElement)?.isContentEditable; 
+
+            if (isTyping) return;
+
+            switch (e.key) {
+                case "Delete":
+                case "Backspace":
+                    deleteLayers();
+                    break;
+                case "z":
+                    if (e.ctrlKey || e.metaKey) {
+                        if (e.shiftKey) {
+                            history.redo();
+                        } else {
+                            history.undo();
+                        }
+                    }
+                    break;
+            }
+        }
+
+        window.addEventListener("keydown", onKeyDown);
+        return () => window.removeEventListener("keydown", onKeyDown);
+    }, [deleteLayers, history]);
 
     return (
         <main

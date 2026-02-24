@@ -65,7 +65,7 @@ export const Info = ({
             <Hint label="Edit board title" side="bottom" sideOffset={10}>
                 <Button
                     variant={"board"}
-                    className="text-base font-normal px-2"
+                    className="text-base font-normal px-2 select-none"
                     onClick={() => onOpen(data._id, data.title)}
                 >
                     {data.title}

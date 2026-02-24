@@ -4,7 +4,6 @@ import React from "react";
 import { twMerge } from "tailwind-merge"
 
 const COLORS = [
-  "#08081c",
   "#141347",
   "#2bc2ad",
   "#d43d52",
@@ -12,6 +11,9 @@ const COLORS = [
   "#732bde",
   "#12a66b",
   "#d47118",
+  "#ffe0fd",
+  "#1fb5f0",
+  "#ffba07",
 ]
 
 export function cn(...inputs: ClassValue[]) {

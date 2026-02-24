@@ -1,7 +1,7 @@
 # Inkly
 
 ## Description
-
+### Disclaimer: only for large screens(computers, laptops, tablets)
 A cool and simple whiteboard application built using next.js. Uses liveblocks for the multi user presence.
 
 ## Features

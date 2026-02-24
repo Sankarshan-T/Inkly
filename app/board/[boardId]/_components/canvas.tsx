@@ -273,7 +273,6 @@ export const Canvas = ({
     },
         [
             camera,
-            canvasState,
             resizeSelectedLayer,
             translateSelectedLayers,
             startSelectionNet,

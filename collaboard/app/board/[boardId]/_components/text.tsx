@@ -55,7 +55,8 @@ export const Text = ({
             height={height}
             onPointerDown={(e) => onPointerDown(e, id)}
             style={{
-                outline: selectionColor ? `ipx solid ${selectionColor}` : "none"
+                outline: selectionColor ? `ipx solid ${selectionColor}` : "none",
+                userSelect: "none",
             }}
         >
             <ContentEditable

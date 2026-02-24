@@ -21,7 +21,7 @@ interface RoomProps {
 const RoomGuard = ({ children }: { children: ReactNode, fallback: ReactNode }) => {
     const status = useStatus();
     if (status === "disconnected") {
-        return <RedirectToSignIn/>
+        return <RedirectToSignIn />
     }
 
     return <>{children}</>;
@@ -33,7 +33,7 @@ export const Room = ({ children, roomId, fallback }: RoomProps) => {
             <ErrorBoundary fallback={fallback}>
                 <RoomProvider
                     id={roomId}
-                    initialPresence={{ cursor: null, selection: [] }}
+                    initialPresence={{ cursor: null, selection: [], penColor: null, pencilDraft: null, }}
                     initialStorage={{
                         layers: new LiveMap<string, LiveObject<Layer>>(),
                         layerIds: new LiveList<string>([]),

@@ -57,6 +57,7 @@ export const Note = ({
             style={{
                 outline: selectionColor ? `ipx solid ${selectionColor}` : "none",
                 backgroundColor: fill ? colorToCss(fill) : "#197278",
+                userSelect: "none",
             }}
             className="shadow-md drop-shadow-xl"
         >

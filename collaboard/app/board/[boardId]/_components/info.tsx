@@ -24,7 +24,7 @@ const font = Poppins({
 
 const Separator = () => {
     return (
-        <div className="text-neutral-300 text-2xl px-1.5 py-0 leading-0">
+        <div className="text-neutral-300 text-2xl px-1.5 py-0 leading-0 select-none">
             |
         </div>
     )

@@ -26,9 +26,12 @@ export function pointerEventToCanvasPoint(
   e: React.PointerEvent,
   camera: Camera,
 ) {
+  const svg = e.currentTarget as SVGSVGElement;
+  const rect = svg.getBoundingClientRect();
+
   return {
-    x: Math.round(e.clientX) - camera.x,
-    y: Math.round(e.clientY) - camera.y,
+    x: Math.round(e.clientX - rect.left) - camera.x,
+    y: Math.round(e.clientY - rect.top) - camera.y,
   };
 };
 

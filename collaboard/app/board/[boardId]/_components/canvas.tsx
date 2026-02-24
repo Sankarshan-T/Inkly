@@ -391,7 +391,7 @@ export const Canvas = ({
                 setLastUsedColor={setLastUsedColor}
             />
             <svg
-                className="h-screen w-screen overflow-x-scroll"
+                className="h-screen w-screen"
                 onWheel={onWheel}
                 onPointerMove={onPointerMove}
                 onPointerDown={onPointerDown}
@@ -400,7 +400,7 @@ export const Canvas = ({
             >
                 <g
                     style={{
-                        transform: `translate(${camera.x}, ${camera.y}px)`,
+                        transform: `translate(${camera.x}px, ${camera.y}px)`,
                     }}
                 >
                     {layerIds?.map((layerId) => (

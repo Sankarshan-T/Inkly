@@ -15,3 +15,4 @@ A cool and simple whiteboard application built using next.js. Uses liveblocks fo
 ## Gallery
 ![image1](image.png)
 <br>
+![image2](image-1.png)

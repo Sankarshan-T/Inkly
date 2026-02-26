@@ -10,7 +10,6 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { CanvasState, CanvasMode, Camera, Color, LayerType, Point, Side, XYWH } from "@/types/canvas";
 import { CursorsPresence } from "./cursors-presence";
 import { colorToCss, connectionIdToColor, findIntersectingLayersWithRectangle, penPointsToPath, pointerEventToCanvasPoint, resizeBounds } from "@/lib/utils";
-import { mutation } from "@/convex/_generated/server";
 import { LiveObject } from "@liveblocks/client";
 import { LayerPreview } from "./layer-preview";
 import { SelectionBox } from "./selection-box";
@@ -53,7 +52,7 @@ export const Canvas = ({
 
     const insertlayer = useMutation((
         { storage, setMyPresence },
-        layerType: LayerType.Ellipse | LayerType.Rectangle | LayerType.Text | LayerType.Note,
+        layerType: LayerType.Ellipse | LayerType.Rectangle | LayerType.Text | LayerType.Note | LayerType.Triangle,
         position: Point,
     ) => {
         const liveLayers = storage.get("layers");

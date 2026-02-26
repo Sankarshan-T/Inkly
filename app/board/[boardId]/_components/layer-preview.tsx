@@ -9,6 +9,7 @@ import { Text } from "./text";
 import { Note } from "./note";
 import { Path } from "./path";
 import { colorToCss } from "@/lib/utils";
+import { Triangle } from "./triangle";
 
 interface LayerPreviewProps {
     id: string;
@@ -26,6 +27,15 @@ export const LayerPreview = memo(({
     if (!layer) return null;
 
     switch (layer.type) {
+        case LayerType.Triangle:
+            return (
+                <Triangle
+                    id={id}
+                    layer={layer}
+                    onPointerDown={onLayerPointerDown}
+                    selectionColor={selectionColor}
+                />
+            );
         case LayerType.Path:
             return (
                 <Path

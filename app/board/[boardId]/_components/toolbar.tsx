@@ -1,4 +1,4 @@
-import { Circle, MousePointer2, Pencil, Redo2, Square, StickyNote, Type, Undo2 } from "lucide-react";
+import { Circle, MousePointer2, Pencil, Redo2, Square, StickyNote, Triangle, Type, Undo2 } from "lucide-react";
 import { ToolButton } from "./tool-button";
 import { CanvasMode, CanvasState, LayerType } from "@/types/canvas";
 
@@ -86,6 +86,19 @@ export const Toolbar = ({
                     isActive={
                         canvasState.mode === CanvasMode.Inserting &&
                         canvasState.layerType === LayerType.Ellipse
+                    }
+                />
+
+                <ToolButton
+                    label="Triangle"
+                    icon={Triangle}
+                    onClick={() => setCanvasState({
+                        mode: CanvasMode.Inserting,
+                        layerType: LayerType.Triangle,
+                    })}
+                    isActive={
+                        canvasState.mode === CanvasMode.Inserting &&
+                        canvasState.layerType === LayerType.Triangle
                     }
                 />
 

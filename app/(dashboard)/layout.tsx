@@ -4,7 +4,6 @@ import { Authenticated, Unauthenticated } from "convex/react";
 import { Navbar } from "./_components/navbar";
 import { OrgSidebar } from "./_components/org-sidebar";
 import { Sidebar } from "./_components/sidebar";
-import { RedirectToSignIn } from '@clerk/nextjs'
 import { HomePage } from "./_components/unauthenticated/homepage";
 
 interface DashboardLayoutProps {
@@ -37,4 +36,4 @@ const DashboardLayout = ({
     );
 };
 
-export default DashboardLayout
+export default DashboardLayout;

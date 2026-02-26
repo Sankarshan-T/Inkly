@@ -8,7 +8,7 @@ import { ColorPicker } from "./color-picker";
 import { useDeleteLayers } from "@/hooks/use-delete-layers";
 import { Hint } from "@/components/hint";
 import { Button } from "@/components/ui/button";
-import { BringToFront, SendToBack, Trash2 } from "lucide-react";
+import { BringToFront, SendToBack, Trash2, BoxSelect } from "lucide-react";
 
 interface SelectionToolsProps {
     camera: Camera;
@@ -20,6 +20,7 @@ export const SelectionTools = memo(({
     setLastUsedColor,
 }: SelectionToolsProps) => {
     const selection = useSelf((me) => me.presence.selection);
+
 
     const sendToBack = useMutation(({ storage }) => { 
         const liveLayerIds = storage.get("layerIds");
@@ -67,6 +68,19 @@ export const SelectionTools = memo(({
         })
     }, [selection, setLastUsedColor]);
 
+    const toggleFill = useMutation(({ storage }) => {
+        const liveLayers = storage.get("layers") as any;
+        
+        selection?.forEach((id) => {
+            const layer = liveLayers.get(id);
+
+            if (layer) {
+                const currentOutline = layer.get("outlineOnly");
+                layer.set("outlineOnly", !currentOutline);
+            }
+        });
+    }, [selection]);
+
     const deleteLayers = useDeleteLayers();
 
     const selectionBounds = useSelectionBounds();
@@ -103,15 +117,23 @@ export const SelectionTools = memo(({
                 </Hint>
             </div>
 
-            <div className="flex items-center pl-2 ml-2 border-l border-neutral-200">
+            <div className="flex items-center pl-2 ml-2 border-l border-neutral-200 flex-col gap-y-0.5">
                 <Hint label="Delete">
                     <Button
                         variant={"board"}
                         size={"icon"}
                         onClick={deleteLayers}
                     >
-
                         <Trash2 />
+                    </Button>
+                </Hint>
+                <Hint label="Fill" side="bottom">
+                    <Button
+                        variant={"board"}
+                        size={"icon"}
+                        onClick={toggleFill}
+                    >
+                        <BoxSelect />
                     </Button>
                 </Hint>
             </div>

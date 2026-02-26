@@ -26,16 +26,18 @@ export type TriangleLayer = {
     width: number;
     fill: Color;
     value?: string;
+    outlineOnly?: boolean;
 }
 
 export type RectangleLayer = {
     type: LayerType.Rectangle;
-    x: number;
+    x: number;  
     y: number;
     height: number;
     width: number;
     fill: Color;
     value?: string;
+    outlineOnly?: boolean;
 };
 
 export type EllipseLayer = {
@@ -46,6 +48,7 @@ export type EllipseLayer = {
     width: number;
     fill: Color;
     value?: string;
+    outlineOnly?: boolean;
 };
 
 export type PathLayer = {

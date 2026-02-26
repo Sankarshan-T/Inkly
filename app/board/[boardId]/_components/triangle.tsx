@@ -14,7 +14,7 @@ export const Triangle = ({
     onPointerDown,
     selectionColor,
 }: TriangleProps) => {
-    const { x, y, width, height, fill } = layer;
+    const { x, y, width, height, fill, outlineOnly } = layer;
 
     return (
         <path
@@ -23,8 +23,8 @@ export const Triangle = ({
                 transform: `translate(${x}px, ${y}px)`,
             }}
             d={`M ${width / 2} 0 L ${width} ${height} L 0 ${height} Z`}
-            fill={fill ? colorToCss(fill) : "#CCC"}
-            stroke={selectionColor || "transparent"}
+            fill={outlineOnly ? "transparent" : colorToCss(fill)}
+            stroke={outlineOnly ? colorToCss(fill) : selectionColor || "transparent"}
             strokeWidth="1"
         />
     );

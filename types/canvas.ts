@@ -16,6 +16,7 @@ export enum LayerType {
     Text,
     Note,
     Triangle,
+    Line,
 };
 
 export type TriangleLayer = {
@@ -125,6 +126,9 @@ export type CanvasState =
         mode: CanvasMode.Pencil,
     }
     | {
+        mode: CanvasMode.Line,
+    }
+    | {
         mode: CanvasMode.Pressing,
         origin: Point;
     }
@@ -143,6 +147,7 @@ export enum CanvasMode {
     Inserting,
     Resizing,
     Pencil,
+    Line,
 };
 
 export type Layer = RectangleLayer | EllipseLayer | PathLayer | TextLayer | NoteLayer | TriangleLayer

@@ -13,6 +13,6 @@ A cool and simple whiteboard application built using next.js. Uses liveblocks fo
 - Layers: With many layers in the board, control the z-index any layer!
 
 ## Gallery
-![image1](image.png)
+![image1](public/image.png)
 <br>
-![image2](image-1.png)
+![image2](public/image-1.png)

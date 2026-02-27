@@ -1,6 +1,10 @@
-import { Circle, MousePointer2, Pencil, Redo2, Square, StickyNote, Triangle, Type, Undo2 } from "lucide-react";
+"use client";
+
+import { Circle, MousePointer2, Pencil, Redo2, Slash, Square, StickyNote, Trash2, Triangle, Type, Undo2 } from "lucide-react";
 import { ToolButton } from "./tool-button";
 import { CanvasMode, CanvasState, LayerType } from "@/types/canvas";
+import { useClearCanvas } from "@/hooks/use-clear-canvas";
+import { useStorage } from "@liveblocks/react";
 
 interface ToolbarProps {
     canvasState: CanvasState;
@@ -19,6 +23,8 @@ export const Toolbar = ({
     canUndo,
     canRedo,
 }: ToolbarProps) => {
+    const clearCanvas = useClearCanvas();
+    const isEmpty = useStorage((root) => root.layerIds.length === 0);
     return (
         <div className="absolute top-[50%] -translate-y-[50%] left-2 flex flex-col gap-y-4">
             <div className="bg-white rounded-md p-1.5 flex gap-y-1 flex-col items-center shadow-md">
@@ -64,7 +70,7 @@ export const Toolbar = ({
                 />
 
                 <ToolButton
-                    label="Rectagle"
+                    label="Rectangle"
                     icon={Square}
                     onClick={() => setCanvasState({
                         mode: CanvasMode.Inserting,
@@ -112,6 +118,17 @@ export const Toolbar = ({
                         canvasState.mode === CanvasMode.Pencil
                     }
                 />
+
+                <ToolButton
+                    label="Line"
+                    icon={Slash}
+                    onClick={() => setCanvasState({
+                        mode: CanvasMode.Line
+                    })}
+                    isActive={
+                        canvasState.mode === CanvasMode.Line
+                    }
+                />
             </div>
             <div className="bg-white rounded-md p-1.5 flex flex-col items-center shadow-md">
                 <ToolButton
@@ -127,6 +144,13 @@ export const Toolbar = ({
                     onClick={redo}
                     isDisabled={!canRedo}
                 />
+                <ToolButton
+                    label="Clear Canvas"
+                    icon={Trash2}
+                    onClick={clearCanvas}
+                    isDisabled={isEmpty || undefined}
+                />
+            
             </div>
         </div>
     );

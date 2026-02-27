@@ -152,21 +152,26 @@ export const Canvas = ({
     ) => {
         const { pencilDraft } = self.presence;
 
-        if (
-            canvasState.mode !== CanvasMode.Pencil ||
-            e.buttons !== 1 ||
-            pencilDraft == null
-        ) return;
+        if (e.buttons !== 1 || pencilDraft == null) return;
 
-        setMyPresence({
-            cursor: point,
-            pencilDraft:
-                pencilDraft.length === 1 &&
+        if (canvasState.mode === CanvasMode.Pencil) {
+            setMyPresence({
+                cursor: point,
+                pencilDraft: pencilDraft.length === 1 &&
                     pencilDraft[0][0] === point.x &&
                     pencilDraft[0][1] === point.y
                     ? pencilDraft
                     : [...pencilDraft, [point.x, point.y, e.pressure]],
-        });
+            });
+        } else if (canvasState.mode === CanvasMode.Line) {
+            setMyPresence({
+                cursor: point,
+                pencilDraft: [
+                    pencilDraft[0],
+                    [point.x, point.y, e.pressure] 
+                ],
+            });
+        }
     }, [canvasState.mode]);
 
     const insertPath = useMutation((
@@ -197,9 +202,9 @@ export const Canvas = ({
         liveLayerIds.push(id);
 
         setMyPresence({ pencilDraft: null });
-        setCanvasState({ mode: CanvasMode.Pencil });
+        setCanvasState({ mode: canvasState.mode as any });
 
-    }, [lastUsedColor]);
+    }, [lastUsedColor, canvasState]);
 
     const startDrawing = useMutation((
         { setMyPresence },
@@ -264,7 +269,10 @@ export const Canvas = ({
             translateSelectedLayers(current);
         } else if (canvasState.mode === CanvasMode.Resizing) {
             resizeSelectedLayer(current)
-        } else if (canvasState.mode === CanvasMode.Pencil) {
+        } else if (
+            canvasState.mode === CanvasMode.Pencil ||
+            canvasState.mode === CanvasMode.Line
+        ) {
             continueDrawing(current, e);
         }
 
@@ -272,6 +280,7 @@ export const Canvas = ({
     },
         [
             camera,
+            canvasState,
             resizeSelectedLayer,
             translateSelectedLayers,
             startSelectionNet,
@@ -291,7 +300,7 @@ export const Canvas = ({
 
         if (canvasState.mode === CanvasMode.Inserting) return;
 
-        if (canvasState.mode === CanvasMode.Pencil) {
+        if (canvasState.mode === CanvasMode.Pencil || canvasState.mode === CanvasMode.Line) {
             startDrawing(point, e.pressure);
             return;
         }
@@ -301,7 +310,7 @@ export const Canvas = ({
 
     const onPointerUp = useMutation((
         { },
-        e
+        e: React.PointerEvent
     ) => {
         const point = pointerEventToCanvasPoint(e, camera);
 
@@ -310,30 +319,31 @@ export const Canvas = ({
             canvasState.mode === CanvasMode.Pressing
         ) {
             unselectLayers();
-            setCanvasState({
-                mode: CanvasMode.None,
-            });
-        } else if (canvasState.mode === CanvasMode.Pencil) {
+            setCanvasState({ mode: CanvasMode.None });
+        }
+        else if (
+            canvasState.mode === CanvasMode.Pencil ||
+            canvasState.mode === CanvasMode.Line
+        ) {
             insertPath();
-        } else if (canvasState.mode === CanvasMode.Inserting) {
+        }
+        else if (canvasState.mode === CanvasMode.Inserting) {
             insertlayer(canvasState.layerType, point);
-        } else {
-            setCanvasState({
-                mode: CanvasMode.None
-            });
+        }
+        else {
+            setCanvasState({ mode: CanvasMode.None });
         }
 
         history.resume();
-    },
-        [camera,
-            setCanvasState,
-            camera,
-            canvasState,
-            history,
-            insertlayer,
-            unselectLayers,
-            insertPath,
-        ]);
+    }, [
+        camera,
+        canvasState,
+        history,
+        insertlayer,
+        unselectLayers,
+        insertPath,
+        setCanvasState,
+    ]);
 
     const selections = useOthersMapped((other) => other.presence.selection);
 
@@ -380,7 +390,7 @@ export const Canvas = ({
     useEffect(() => {
         function onKeyDown(e: KeyboardEvent) {
             const isTyping =
-                (document.activeElement as HTMLElement)?.isContentEditable; 
+                (document.activeElement as HTMLElement)?.isContentEditable;
 
             if (isTyping) return;
 

@@ -19,6 +19,7 @@ export const Path = ({
     onPointerDown,
     stroke,
 }: PathProps) => {
+
     return (
         <path
             className="drop-shadow-md"
@@ -29,16 +30,15 @@ export const Path = ({
                     thinning: 0.5,
                     smoothing: 0.5,
                     streamline: 0.5,
+                    simulatePressure: points.length === 2 ? false : true,
                 })
             )}
             style={{
                 transform: `translate(${x}px, ${y}px)`,
             }}
-            x={0}
-            y={0}
             fill={fill}
             stroke={stroke}
-            strokeWidth={1}
+            strokeWidth={0.5}
         />
     )
 }

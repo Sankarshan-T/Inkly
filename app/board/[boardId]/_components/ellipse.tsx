@@ -15,7 +15,7 @@ export const Ellipse = ({
     onPointerDown,
     selectionColor,
 }: EllipseProps) => {
-    const { fill, outlineOnly } = layer;
+    const { fill, outlineOnly, strokeWidth } = layer;
     return (
         <ellipse
             className="drop-shadow-md"
@@ -32,7 +32,7 @@ export const Ellipse = ({
             ry={layer.height / 2}
             fill={outlineOnly ? "transparent" : colorToCss(fill)}
             stroke={outlineOnly ? colorToCss(fill) : selectionColor || "transparent"}
-            strokeWidth={2}
+            strokeWidth={strokeWidth || 2}
         />
     );
 };

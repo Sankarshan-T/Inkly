@@ -15,7 +15,7 @@ export const Rectangle = ({
     onPointerDown,
     selectionColor,
 }: RectangleProps) => {
-    const { x, y, width, height , fill, outlineOnly } = layer;
+    const { x, y, width, height , fill, outlineOnly, strokeWidth } = layer;
 
     return(
         <rect
@@ -28,7 +28,7 @@ export const Rectangle = ({
             y={0}
             width={width}
             height={height}
-            strokeWidth={2}
+            strokeWidth={strokeWidth || 2}
             fill={outlineOnly ? "transparent" : colorToCss(fill)}
             stroke={outlineOnly ? colorToCss(fill) : selectionColor || "transparent"}
         />

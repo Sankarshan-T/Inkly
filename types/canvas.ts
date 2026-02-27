@@ -27,6 +27,7 @@ export type TriangleLayer = {
     fill: Color;
     value?: string;
     outlineOnly?: boolean;
+    strokeWidth?: number;
 }
 
 export type RectangleLayer = {
@@ -38,6 +39,7 @@ export type RectangleLayer = {
     fill: Color;
     value?: string;
     outlineOnly?: boolean;
+    strokeWidth?: number;
 };
 
 export type EllipseLayer = {
@@ -49,6 +51,7 @@ export type EllipseLayer = {
     fill: Color;
     value?: string;
     outlineOnly?: boolean;
+    strokeWidth?: number;
 };
 
 export type PathLayer = {

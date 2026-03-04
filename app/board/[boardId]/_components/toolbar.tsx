@@ -144,13 +144,13 @@ export const Toolbar = ({
                     onClick={redo}
                     isDisabled={!canRedo}
                 />
+                
                 <ToolButton
                     label="Clear Canvas"
                     icon={Trash2}
                     onClick={clearCanvas}
                     isDisabled={isEmpty || undefined}
                 />
-            
             </div>
         </div>
     );

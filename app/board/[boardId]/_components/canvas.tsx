@@ -168,7 +168,7 @@ export const Canvas = ({
                 cursor: point,
                 pencilDraft: [
                     pencilDraft[0],
-                    [point.x, point.y, e.pressure] 
+                    [point.x, point.y, e.pressure]
                 ],
             });
         }
@@ -417,7 +417,7 @@ export const Canvas = ({
 
     return (
         <main
-            className="h-full w-full relative bg-neutral-100 touch-none"
+            className="h-full w-full relative bg-[radial-gradient(#e5e7eb_2px,transparent_2px)] bg-size-[30px_30px] touch-none"
         >
             <Info boardId={boardId} />
             <Participants />

@@ -1,5 +1,6 @@
 import { ArrowBigDown, Globe, Layers, MousePointer2, PencilLine, Stars, User } from "lucide-react"
 import { SignInToInkly } from "./sign-in"
+import { PreviewCanvas } from "./canvas-preview"
 
 export const HomePage = () => {
     return (
@@ -10,8 +11,12 @@ export const HomePage = () => {
                     <img src="./logo.svg" className="h-9 w-9" alt="Inkly Logo" />
                     <span>Inkly</span>
                 </div>
+                <div className="flex items-center gap-x-5">
+                    <a href="#preview">Preview</a>
+                    <a href="#features">Features</a>
+                    <SignInToInkly />
+                </div>
 
-                <SignInToInkly />
             </nav>
 
             <main className="h-screen w-full flex flex-col items-center justify-center text-center px-6 ">
@@ -20,24 +25,30 @@ export const HomePage = () => {
                 </h1>
 
                 <p className="mt-6 text-xl md:text-2xl font-light text-indigo-800/80 max-w-2xl leading-relaxed">
-                    A minimalist collaborative whiteboard.
+                    A minimalist collaborative whiteboard. 
                     <span className="mt-2 block font-medium text-indigo-800">Powerful features, zero cost.</span>
                 </p>
-
                 <p className="mt-5 text-xl md:text-2xl font-light text-indigo-800/80 max-w-2xl leading-relaxed">
-                    Sign In now, and get started!
+                    Try it out!
                 </p>
-
                 <a
                     className="mt-12 p-3 text-indigo-400 rounded-full border-2 border-transparent transition-all duration-300 hover:text-indigo-600 hover:border-indigo-100 hover:bg-indigo-50 animate-bounce cursor-pointer group"
-                    onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
+                    onClick={() => document.getElementById('preview')?.scrollIntoView({ behavior: 'smooth' })}
                 >
                     <ArrowBigDown className="w-8 h-8 transition-transform group-hover:scale-110" />
                 </a>
+
             </main>
 
+            <section id="preview" className="w-full h-screen flex justify-center items-center perspective-1000">
+                <div className="animate-in fade-in zoom-in duration-700 delay-300 fill-mode-both w-full flex justify-center">
+                    <PreviewCanvas />
+                </div>
+            </section>
+
             <section id="features" className="h-screen w-full flex flex-col gap-y-10 items-center justify-center bg-white py-20 px-20">
-                <h2 className="text-4xl font-bold text-blue-950 text-center">Features</h2>
+                <h2 className="text-4xl font-bold text-blue-950 text-center mt-10">Features</h2>
+                <p className="text-blue-950 text-center">These features will be unlocked after signing in. Sign In now, and get started!</p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {/* 1 */}
                     <div className="p-8 rounded-3xl bg-white border border-blue-100 shadow-sm hover:shadow-md transition-shadow group">
@@ -90,7 +101,7 @@ export const HomePage = () => {
                             <Layers size={24} />
                         </div>
                         <h3 className="text-xl font-bold text-cyan-950 mb-2">Layers</h3>
-                        <p className="text-cyan-800/70">With many layers in the board, control the z-index any layer!</p>
+                        <p className="text-cyan-800/70">With many layers in the board, control the z-index any layer! Sign In now, and get started!</p>
                     </div>
                 </div>
             </section>

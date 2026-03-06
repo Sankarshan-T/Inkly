@@ -1,10 +1,11 @@
-import { ArrowBigDown, Globe, Layers, MousePointer2, PencilLine, Stars, User } from "lucide-react"
-import { SignInToInkly } from "./sign-in"
-import { PreviewCanvas } from "./canvas-preview"
+import { ArrowBigDown, Globe, Layers, MousePointer2, PencilLine, Stars, User } from "lucide-react";
+import { SignInToInkly } from "./sign-in";
+import { PreviewCanvas } from "./canvas-preview";
+import Typewriter from 'typewriter-effect';
 
 export const HomePage = () => {
     return (
-        <div className="min-h-screen w-full flex flex-col bg-slate-50 overflow-y-auto scroll-smooth">
+        <div className="min-h-screen w-full flex flex-col bg-slate-50 bg-[radial-gradient(#e5e7eb_4px,transparent_5px)] bg-size-[30px_30px] touch-none overflow-y-auto scroll-smooth">
             <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 h-18 w-[90%] max-w-6xl rounded-2xl bg-indigo-900 backdrop-blur-md flex items-center justify-between px-8 text-white shadow-xl">
 
                 <div className="text-4xl font-bold flex items-center gap-3 tracking-tight">
@@ -20,12 +21,23 @@ export const HomePage = () => {
             </nav>
 
             <main className="h-screen w-full flex flex-col items-center justify-center text-center px-6 ">
-                <h1 className="mt-15 text-5xl md:text-6xl font-black text-indigo-950 tracking-tight">
-                    Your ideas, <span className="text-indigo-600">doodled</span> here.
+                <h1 className="mt-15 text-5xl md:text-6xl font-black text-indigo-950 tracking-tight flex items-center justify-center whitespace-nowrap">
+                    <span>Your ideas,</span>
+                    <span className="text-indigo-600 ml-1">
+                        <Typewriter
+                            options={{
+                                strings: ['doodled', 'sketched','shared',' inked'],
+                                autoStart: true,
+                                loop: true,
+                                deleteSpeed: 55,
+                            }}
+                        />
+                    </span>
+                    <span>here</span>
                 </h1>
 
                 <p className="mt-6 text-xl md:text-2xl font-light text-indigo-800/80 max-w-2xl leading-relaxed">
-                    A minimalist collaborative whiteboard. 
+                    A minimalist collaborative whiteboard.
                     <span className="mt-2 block font-medium text-indigo-800">Powerful features, zero cost.</span>
                 </p>
                 <p className="mt-5 text-xl md:text-2xl font-light text-indigo-800/80 max-w-2xl leading-relaxed">

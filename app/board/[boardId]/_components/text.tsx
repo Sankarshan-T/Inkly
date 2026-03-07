@@ -33,9 +33,11 @@ export const Text = ({
     selectionColor
 }: TextProps) => {
     const { x, y, width, height, fill, value } = layer;
+    const MAX_WIDTH = 400;
+
 
     const updateValue = useMutation((
-        {storage},
+        { storage },
         newValue: string,
     ) => {
         const liveLayers = storage.get("layers");
@@ -44,7 +46,47 @@ export const Text = ({
     }, []);
 
     const handleContentChange = (e: ContentEditableEvent) => {
-        updateValue(e.target.value);
+        const text = e.target.value;
+        updateValue(text);
+
+        const el = e.currentTarget as HTMLElement;
+        const fontSize = 48;
+
+        const textWidth = measureTextWidth(text, fontSize);
+        const lineHeight = fontSize * 1.2;
+
+        const lines = Math.ceil(textWidth / MAX_WIDTH);
+
+        const currentLines = Math.round((height - 10) / lineHeight);
+        let newHeight = height;
+
+        if (lines > currentLines) {
+            newHeight = lines * lineHeight + 10; 
+        }
+
+        const newWidth = Math.min(textWidth + 20, MAX_WIDTH);
+
+        updateSize(newWidth, newHeight);
+    };
+
+    const updateSize = useMutation(({ storage }, w: number, h: number) => {
+        const liveLayers = storage.get("layers");
+        const layer = liveLayers.get(id);
+
+        layer?.set("width", w);
+        layer?.set("height", h);
+    }, []);
+
+    const measureTextWidth = (text: string, fontSize: number) => {
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+
+        if (!context) return 0;
+
+        context.font = `${fontSize}px Nerko One`;
+        const metrics = context.measureText(text);
+
+        return metrics.width;
     };
 
     return (
@@ -55,7 +97,7 @@ export const Text = ({
             height={height}
             onPointerDown={(e) => onPointerDown(e, id)}
             style={{
-                outline: selectionColor ? `ipx solid ${selectionColor}` : "none",
+                outline: selectionColor ? `1px solid ${selectionColor}` : "none",
                 userSelect: "none",
             }}
         >
@@ -63,11 +105,15 @@ export const Text = ({
                 html={value || "Text"}
                 onChange={handleContentChange}
                 className={cn(
-                    "h-full w-full flex items-center justify-center text-center drop-shadow-md outline-none", font.className
+                    "w-full h-full drop-shadow-md outline-none",
+                    font.className
                 )}
                 style={{
-                    fontSize: calculateFontSize(width, height),
-                    color: fill ? colorToCss(fill) : "#000"
+                    fontSize: 48,
+                    lineHeight: 1.2,
+                    color: fill ? colorToCss(fill) : "#000",
+                    whiteSpace: "pre-wrap",
+                    wordBreak: "break-word",
                 }}
             />
         </foreignObject>

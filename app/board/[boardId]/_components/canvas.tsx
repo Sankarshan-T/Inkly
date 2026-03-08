@@ -396,7 +396,6 @@ export const Canvas = ({
 
             switch (e.key) {
                 case "Delete":
-                case "Backspace":
                     deleteLayers();
                     break;
                 case "z":

@@ -1,6 +1,6 @@
 "use client";
 
-import { Circle, MousePointer2, Pencil, Redo2, Slash, Square, StickyNote, Trash2, Triangle, Type, Undo2 } from "lucide-react";
+import { Circle, MousePointer2, Pencil, Pi, Redo2, Slash, Square, StickyNote, Trash2, Triangle, Type, Undo2 } from "lucide-react";
 import { ToolButton } from "./tool-button";
 import { CanvasMode, CanvasState, LayerType } from "@/types/canvas";
 import { useClearCanvas } from "@/hooks/use-clear-canvas";
@@ -53,6 +53,19 @@ export const Toolbar = ({
                     isActive={
                         canvasState.mode === CanvasMode.Inserting &&
                         canvasState.layerType === LayerType.Text
+                    }
+                />
+
+                <ToolButton
+                    label="Math"
+                    icon={Pi}
+                    onClick={() => setCanvasState({
+                        mode: CanvasMode.Inserting,
+                        layerType: LayerType.LatexText,
+                    })}
+                    isActive={
+                        canvasState.mode === CanvasMode.Inserting &&
+                        canvasState.layerType === LayerType.LatexText
                     }
                 />
 

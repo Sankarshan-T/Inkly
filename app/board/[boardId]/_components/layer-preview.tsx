@@ -10,6 +10,7 @@ import { Note } from "./note";
 import { Path } from "./path";
 import { colorToCss } from "@/lib/utils";
 import { Triangle } from "./triangle";
+import { LatexText } from "./latextext";
 
 interface LayerPreviewProps {
     id: string;
@@ -66,6 +67,17 @@ export const LayerPreview = memo(({
                     selectionColor={selectionColor}
                 />
             )
+
+        case LayerType.LatexText:
+            return (
+                <LatexText
+                    id={id}
+                    layer={layer}
+                    onPointerDown={onLayerPointerDown}
+                    selectionColor={selectionColor}
+                />
+            )
+
         case LayerType.Ellipse:
             return (
                 <Ellipse

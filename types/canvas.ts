@@ -17,6 +17,7 @@ export enum LayerType {
     Note,
     Triangle,
     Line,
+    LatexText,
 };
 
 export type TriangleLayer = {
@@ -76,6 +77,16 @@ export type TextLayer = {
     value?: string;
 };
 
+export type LatexTextLayer = {
+    type: LayerType.LatexText;
+    x: number;
+    y: number;
+    height: number;
+    width: number;
+    fill: Color;
+    value?: string;
+};
+
 export type NoteLayer = {
     type: LayerType.Note;
     x: number;
@@ -120,7 +131,7 @@ export type CanvasState =
     }
     | {
         mode: CanvasMode.Inserting,
-        layerType: LayerType.Ellipse | LayerType.Rectangle | LayerType.Text | LayerType.Note | LayerType.Triangle;
+        layerType: LayerType.Ellipse | LayerType.Rectangle | LayerType.Text | LayerType.Note | LayerType.LatexText | LayerType.Triangle;
     }
     | {
         mode: CanvasMode.Pencil,
@@ -150,4 +161,4 @@ export enum CanvasMode {
     Line,
 };
 
-export type Layer = RectangleLayer | EllipseLayer | PathLayer | TextLayer | NoteLayer | TriangleLayer
+export type Layer = RectangleLayer | EllipseLayer | PathLayer | TextLayer | NoteLayer | LatexTextLayer | TriangleLayer

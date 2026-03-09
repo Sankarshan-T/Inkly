@@ -26,8 +26,8 @@ export const Toolbar = ({
     const clearCanvas = useClearCanvas();
     const isEmpty = useStorage((root) => root.layerIds.length === 0);
     return (
-        <div className="absolute top-[50%] -translate-y-[50%] left-2 flex flex-col gap-y-4">
-            <div className="bg-white rounded-md p-1.5 flex gap-y-1 flex-col items-center shadow-md">
+        <div className="absolute top-[50%] -translate-y-[50%] left-2 flex flex-col rounded-2xl gap-y-4 ">
+            <div className=" p-1.5 flex gap-y-1 flex-col items-center bg-white/80 backdrop-blur-md rounded-2xl border border-indigo-100 shadow-xl">
                 <ToolButton
                     label="Select"
                     icon={MousePointer2}
@@ -143,7 +143,7 @@ export const Toolbar = ({
                     }
                 />
             </div>
-            <div className="bg-white rounded-md p-1.5 flex flex-col items-center shadow-md">
+            <div className="p-1.5 flex gap-y-1 flex-col items-center bg-white/80 backdrop-blur-xl rounded-2xl border border-indigo-100 shadow-xl">
                 <ToolButton
                     label="Undo"
                     icon={Undo2}
@@ -157,7 +157,7 @@ export const Toolbar = ({
                     onClick={redo}
                     isDisabled={!canRedo}
                 />
-                
+
                 <ToolButton
                     label="Clear Canvas"
                     icon={Trash2}

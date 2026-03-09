@@ -53,7 +53,8 @@ export const HomePage = () => {
             </main>
 
             <section id="preview" className="w-full h-screen flex justify-center items-center perspective-1000">
-                <div className="animate-in fade-in zoom-in duration-700 delay-300 fill-mode-both w-full flex justify-center">
+                <div className="animate-in fade-in zoom-in duration-700 delay-300 fill-mode-both w-full flex flex-col justify-center items-center gap-y-5">
+                <h2 className="text-4xl font-bold text-blue-950 text-center mt-10">Preview demo</h2>
                     <PreviewCanvas />
                 </div>
             </section>

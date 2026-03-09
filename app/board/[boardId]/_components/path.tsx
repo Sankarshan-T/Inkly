@@ -20,17 +20,38 @@ export const Path = ({
     stroke,
 }: PathProps) => {
 
+    if (points.length === 2) {
+        const [start, end] = points;
+
+        return (
+            <line
+                className="drop-shadow-md"
+                onPointerDown={onPointerDown}
+                x1={start[0]}
+                y1={start[1]}
+                x2={end[0]}
+                y2={end[1]}
+                stroke={fill}
+                strokeWidth={12}
+                strokeLinecap="round"
+                style={{
+                    transform: `translate(${x}px, ${y}px)`
+                }}
+            />
+        );
+    }
+
     return (
         <path
             className="drop-shadow-md"
             onPointerDown={onPointerDown}
             d={getSvgPathFromStroke(
                 getStroke(points, {
-                    size: points.length === 2 ? 10 : 16,
+                    size: 16,
                     thinning: 0.5,
                     smoothing: 0.5,
                     streamline: 0.5,
-                    simulatePressure: points.length === 2 ? false : true,
+                    simulatePressure: true,
                 })
             )}
             style={{
@@ -40,5 +61,5 @@ export const Path = ({
             stroke={stroke}
             strokeWidth={1}
         />
-    )
-}
+    );
+};

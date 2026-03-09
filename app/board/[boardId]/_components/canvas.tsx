@@ -52,7 +52,7 @@ export const Canvas = ({
 
     const insertlayer = useMutation((
         { storage, setMyPresence },
-        layerType: LayerType.Ellipse | LayerType.Rectangle | LayerType.Text | LayerType.Note | LayerType.Triangle,
+        layerType: LayerType.Ellipse | LayerType.Rectangle | LayerType.Text | LayerType.Note | LayerType.Triangle | LayerType.LatexText,
         position: Point,
     ) => {
         const liveLayers = storage.get("layers");
@@ -451,6 +451,10 @@ export const Canvas = ({
                             id={layerId}
                             onLayerPointerDown={onLayerPointerDown}
                             selectionColor={layerIdsToColorSelection[layerId]}
+                            isDrawing={
+                                canvasState.mode === CanvasMode.Pencil ||
+                                canvasState.mode === CanvasMode.Line
+                            }
                         />
                     ))}
                     <SelectionBox

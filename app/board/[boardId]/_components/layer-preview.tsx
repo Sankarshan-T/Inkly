@@ -16,12 +16,15 @@ interface LayerPreviewProps {
     id: string;
     onLayerPointerDown: (e: React.PointerEvent, layerId: string) => void;
     selectionColor?: string;
+    isDrawing: boolean;
 }
+
 
 export const LayerPreview = memo(({
     id,
     onLayerPointerDown,
     selectionColor,
+    isDrawing,
 }: LayerPreviewProps) => {
     const layer = useStorage((root) => root.layers.get(id));
 
@@ -33,7 +36,10 @@ export const LayerPreview = memo(({
                 <Triangle
                     id={id}
                     layer={layer}
-                    onPointerDown={onLayerPointerDown}
+                    onPointerDown={(e) => {
+                        if (isDrawing) return;
+                        onLayerPointerDown(e, id);
+                    }}
                     selectionColor={selectionColor}
                 />
             );
@@ -42,7 +48,10 @@ export const LayerPreview = memo(({
                 <Path
                     key={id}
                     points={layer.points}
-                    onPointerDown={(e) => onLayerPointerDown(e, id)}
+                    onPointerDown={(e) => {
+                        if (isDrawing) return;
+                        onLayerPointerDown(e, id);
+                    }}
                     x={layer.x}
                     y={layer.y}
                     fill={layer.fill ? colorToCss(layer.fill) : "#197278"}
@@ -63,7 +72,10 @@ export const LayerPreview = memo(({
                 <Text
                     id={id}
                     layer={layer}
-                    onPointerDown={onLayerPointerDown}
+                    onPointerDown={(e) => {
+                        if (isDrawing) return;
+                        onLayerPointerDown(e, id);
+                    }}
                     selectionColor={selectionColor}
                 />
             )
@@ -73,7 +85,10 @@ export const LayerPreview = memo(({
                 <LatexText
                     id={id}
                     layer={layer}
-                    onPointerDown={onLayerPointerDown}
+                    onPointerDown={(e) => {
+                        if (isDrawing) return;
+                        onLayerPointerDown(e, id);
+                    }}
                     selectionColor={selectionColor}
                 />
             )
@@ -83,7 +98,10 @@ export const LayerPreview = memo(({
                 <Ellipse
                     id={id}
                     layer={layer}
-                    onPointerDown={onLayerPointerDown}
+                    onPointerDown={(e) => {
+                        if (isDrawing) return;
+                        onLayerPointerDown(e, id);
+                    }}
                     selectionColor={selectionColor}
                 />
             );
@@ -92,7 +110,10 @@ export const LayerPreview = memo(({
                 <Rectangle
                     id={id}
                     layer={layer}
-                    onPointerDown={onLayerPointerDown}
+                    onPointerDown={(e) => {
+                        if (isDrawing) return;
+                        onLayerPointerDown(e, id);
+                    }}
                     selectionColor={selectionColor}
                 />
             );

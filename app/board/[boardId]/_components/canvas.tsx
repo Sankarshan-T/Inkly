@@ -9,7 +9,7 @@ import { useHistory, useCanUndo, useCanRedo, useMutation, useStorage, useOthersM
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { CanvasState, CanvasMode, Camera, Color, LayerType, Point, Side, XYWH } from "@/types/canvas";
 import { CursorsPresence } from "./cursors-presence";
-import { colorToCss, connectionIdToColor, findIntersectingLayersWithRectangle, penPointsToPath, pointerEventToCanvasPoint, resizeBounds } from "@/lib/utils";
+import { cn, colorToCss, connectionIdToColor, findIntersectingLayersWithRectangle, penPointsToPath, pointerEventToCanvasPoint, resizeBounds } from "@/lib/utils";
 import { LiveObject } from "@liveblocks/client";
 import { LayerPreview } from "./layer-preview";
 import { SelectionBox } from "./selection-box";
@@ -35,7 +35,7 @@ export const Canvas = ({
         mode: CanvasMode.None,
     });
 
-    const [camera, setCamera] = useState<Camera>({ x: 0, y: 0 });
+    const [camera, setCamera] = useState<Camera>({ x: 0, y: 0, zoom: 1 });
 
     const [lastUsedColor, setLastUsedColor] = useState<Color>({
         r: 25,
@@ -250,16 +250,36 @@ export const Canvas = ({
     }, [history]);
 
     const onWheel = useCallback((e: React.WheelEvent) => {
-        setCamera((camera) => ({
-            x: camera.x - e.deltaX,
-            y: camera.y - e.deltaY
-        }));
-    }, [setCamera]);
+        setCamera((camera) => {
+            const zoomFactor = Math.pow(0.999, e.deltaY);
+            const newZoom = Math.min(Math.max(camera.zoom * zoomFactor, 0.1), 10);
+
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+
+            const dx = (mouseX - camera.x) * (1 - zoomFactor);
+            const dy = (mouseY - camera.y) * (1 - zoomFactor);
+
+            return {
+                zoom: newZoom,
+                x: camera.x + dx,
+                y: camera.y + dy,
+            };
+        });
+    }, []);
 
     const onPointerMove = useMutation(({ setMyPresence }, e: React.PointerEvent) => {
         e.preventDefault();
 
         const current = pointerEventToCanvasPoint(e, camera);
+
+        if (canvasState.mode === CanvasMode.Panning) {
+            setCamera((camera) => ({
+                x: camera.x + e.movementX,
+                y: camera.y + e.movementY,
+                zoom: camera.zoom,
+            }));
+        }
 
         if (canvasState.mode === CanvasMode.Pressing) {
             startSelectionNet(current, canvasState.origin);
@@ -297,6 +317,11 @@ export const Canvas = ({
         e: React.PointerEvent,
     ) => {
         const point = pointerEventToCanvasPoint(e, camera);
+
+        if (e.button === 1) {
+            setCanvasState({ mode: CanvasMode.Panning, origin: point });
+            return;
+        }
 
         if (canvasState.mode === CanvasMode.Inserting) return;
 
@@ -417,6 +442,30 @@ export const Canvas = ({
     const deleteLayers = useDeleteLayers();
 
     useEffect(() => {
+        const handleWheel = (e: WheelEvent) => {
+            if (e.ctrlKey || e.metaKey) {
+                e.preventDefault();
+            }
+        };
+
+        window.addEventListener("wheel", handleWheel, { passive: false });
+
+        return () => {
+            window.removeEventListener("wheel", handleWheel);
+        };
+    }, []);
+
+    useEffect(() => {
+        const preventSafariZoom = (e: any) => e.preventDefault();
+
+        window.addEventListener('gesturestart', preventSafariZoom);
+
+        return () => {
+            window.removeEventListener('gesturestart', preventSafariZoom);
+        };
+    }, []);
+
+    useEffect(() => {
         function onKeyDown(e: KeyboardEvent) {
             const isTyping =
                 (document.activeElement as HTMLElement)?.isContentEditable;
@@ -443,17 +492,37 @@ export const Canvas = ({
                     }
                     break;
             }
-
-
         }
 
         window.addEventListener("keydown", onKeyDown);
         return () => window.removeEventListener("keydown", onKeyDown);
     }, [deleteLayers, history]);
 
+    const getCursor = () => {
+        switch (canvasState.mode) {
+            case CanvasMode.Panning:
+            case CanvasMode.Translating:
+                return "cursor-grabbing";
+            case CanvasMode.Inserting:
+                return "cursor-crosshair";
+            case CanvasMode.Resizing:
+                return "cursor-nwse-resize";
+            case CanvasMode.Line:
+                return "cursor-crosshair";
+            case CanvasMode.Pencil:
+                return "cursor-crosshair";
+            default:
+                return "cursor-default";
+        }
+    };
+
     return (
         <main
-            className="h-full w-full relative bg-[radial-gradient(#e5e7eb_2px,transparent_2px)] bg-size-[30px_30px] touch-none"
+            className={`h-full w-full relative touch-none bg-[radial-gradient(#e5e7eb_2px,transparent_2px)] bg-size-[30px_30px] ${getCursor()}`}
+            style={{
+                touchAction: 'none',
+                overscrollBehavior: 'none'
+            }}
         >
             <Info boardId={boardId} />
             <Participants />
@@ -479,7 +548,11 @@ export const Canvas = ({
             >
                 <g
                     style={{
-                        transform: `translate(${camera.x}px, ${camera.y}px)`,
+                        transform: `
+                          translate(${camera.x}px, ${camera.y}px) 
+                          scale(${camera.zoom})
+                        `,
+                        transition: "transform 0.1s ease-out"
                     }}
                 >
                     {layerIds?.map((layerId) => (
@@ -517,6 +590,6 @@ export const Canvas = ({
                     )}
                 </g>
             </svg>
-        </main>
+        </main >
     );
 };

@@ -7,6 +7,7 @@ export type Color = {
 export type Camera = {
     x: number;
     y: number;
+    zoom: number;
 };
 
 export enum LayerType {
@@ -119,6 +120,10 @@ export enum Side {
 export type CanvasState =
     | {
         mode: CanvasMode.None;
+    } 
+    | {
+        mode: CanvasMode.Panning,
+        origin: Point;
     }
     | {
         mode: CanvasMode.SelectionNet,
@@ -159,6 +164,7 @@ export enum CanvasMode {
     Resizing,
     Pencil,
     Line,
+    Panning,
 };
 
 export type Layer = RectangleLayer | EllipseLayer | PathLayer | TextLayer | NoteLayer | LatexTextLayer | TriangleLayer

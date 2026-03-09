@@ -352,10 +352,7 @@ export const Canvas = ({
         e: React.PointerEvent,
         layerId: string,
     ) => {
-        if (
-            canvasState.mode === CanvasMode.Pencil ||
-            canvasState.mode === CanvasMode.Inserting
-        ) {
+        if (canvasState.mode === CanvasMode.Pencil || canvasState.mode === CanvasMode.Inserting) {
             return;
         }
 
@@ -365,11 +362,43 @@ export const Canvas = ({
         const point = pointerEventToCanvasPoint(e, camera);
 
         if (!self.presence.selection.includes(layerId)) {
-            setMyPresence({ selection: [layerId] }, { addToHistory: true });
+            if (e.shiftKey) {
+                setMyPresence({ selection: [...self.presence.selection, layerId] }, { addToHistory: true });
+            } else {
+                setMyPresence({ selection: [layerId] }, { addToHistory: true });
+            }
         }
 
         setCanvasState({ mode: CanvasMode.Translating, current: point });
     }, [setCanvasState, camera, history, canvasState.mode]);
+
+    const duplicateLayers = useMutation(({ storage, self, setMyPresence }) => {
+        const liveLayers = storage.get("layers");
+        const liveLayerIds = storage.get("layerIds");
+        const selection = self.presence.selection;
+
+        const newIds: string[] = [];
+
+        selection.forEach((id) => {
+            const layer = liveLayers.get(id);
+            if (layer) {
+                const newId = nanoid();
+                const layerData = layer.toObject();
+
+                const duplicate = new LiveObject({
+                    ...layerData,
+                    x: layerData.x + 20,
+                    y: layerData.y + 20,
+                });
+
+                liveLayers.set(newId, duplicate);
+                liveLayerIds.push(newId);
+                newIds.push(newId);
+            }
+        });
+
+        setMyPresence({ selection: newIds }, { addToHistory: true });
+    }, []);
 
     const layerIdsToColorSelection = useMemo(() => {
         const layerIdsToColorSelection: Record<string, string> = {};
@@ -407,7 +436,15 @@ export const Canvas = ({
                         }
                     }
                     break;
+                case "d":
+                    if (e.ctrlKey || e.metaKey) {
+                        e.preventDefault();
+                        duplicateLayers();
+                    }
+                    break;
             }
+
+
         }
 
         window.addEventListener("keydown", onKeyDown);

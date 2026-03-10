@@ -26,6 +26,7 @@ declare global {
       info?: {
         name?: string;
         picture?: string;
+        role?: string;
       };
     };
 

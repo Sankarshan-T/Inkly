@@ -1,26 +1,30 @@
 import { useMutation, useSelf } from "@liveblocks/react"
 
 export const useDeleteLayers = () => {
-    const selection = useSelf((me) => me.presence.selection);
+    const selection = useSelf((me) => me.presence.selection) ?? [];
+    const info = useSelf((me) => me.info);
+    const selfId = useSelf((me) => me.id);
 
-    return useMutation((
-        { storage, setMyPresence }
-    ) => {
+    return useMutation(({ storage }) => {
         const liveLayers = storage.get("layers");
         const liveLayerIds = storage.get("layerIds");
 
-        if (!selection) return;
+        const isAdmin = info?.role === "admin";
 
         for (const id of selection) {
-            liveLayers.delete(id);
+            const layer = liveLayers.get(id);
 
-            const index = liveLayerIds.indexOf(id);
-
-            if (index !== -1) {
-                liveLayerIds.delete(index);
+            if (layer) {
+                if (isAdmin || layer.get("authorId") === selfId) {
+                    liveLayers.delete(id);
+                    const index = liveLayerIds.indexOf(id);
+                    if (index !== -1) {
+                        liveLayerIds.delete(index);
+                    }
+                } else {
+                    console.warn("You do not have permission to delete this layer.");
+                }
             }
         }
-
-        setMyPresence({ selection: [] }, { addToHistory: true });
-    }, [selection]);
+    }, [selection, info, selfId]);
 };

@@ -9,10 +9,12 @@ import { useDeleteLayers } from "@/hooks/use-delete-layers";
 import { Hint } from "@/components/hint";
 import { Button } from "@/components/ui/button";
 import { BringToFront, SendToBack, Trash2, BoxSelect } from "lucide-react";
+import { getLayerProperty } from "@/lib/utils";
 
 interface SelectionToolsProps {
     camera: Camera;
     setLastUsedColor: (color: Color) => void;
+    isDisabled?: boolean;
 };
 
 
@@ -20,11 +22,29 @@ interface SelectionToolsProps {
 export const SelectionTools = memo(({
     camera,
     setLastUsedColor,
+    isDisabled,
 }: SelectionToolsProps) => {
     const liveLayers = useStorage((root) => root.layers);
     const selection = useSelf((me) => me.presence.selection);
+    const self = useSelf();
+    const info = self?.info;
+    const selfId = self?.id;
+
+    const isAdmin = info?.role === "admin";
+
+    const canEditAllSelected = useMemo(() => {
+        if (isAdmin) return true;
+        if (!selection || selection.length === 0 || !liveLayers) return false;
+
+        return selection.every((id) => {
+            const layer = liveLayers.get(id);
+            return getLayerProperty(layer, "authorId") === selfId;
+        });
+    }, [selection, liveLayers, isAdmin, selfId]);
 
     const isFillableOrStrokable = useMemo(() => {
+        if (!canEditAllSelected) return;
+
         if (!selection || selection.length === 0) return false;
         if (!liveLayers) return;
 
@@ -41,6 +61,8 @@ export const SelectionTools = memo(({
 
 
     const sendToBack = useMutation(({ storage }) => {
+        if (!canEditAllSelected) return;
+
         const liveLayerIds = storage.get("layerIds");
         const indices: number[] = [];
 
@@ -58,6 +80,8 @@ export const SelectionTools = memo(({
     }, [selection]);
 
     const bringToFront = useMutation(({ storage }) => {
+        if (!canEditAllSelected) return;
+
         const liveLayerIds = storage.get("layerIds");
         const indices: number[] = [];
 
@@ -78,6 +102,8 @@ export const SelectionTools = memo(({
         { storage },
         fill: Color,
     ) => {
+        if (!canEditAllSelected) return;
+
         const liveLayers = storage.get("layers");
         setLastUsedColor(fill);
 
@@ -87,6 +113,8 @@ export const SelectionTools = memo(({
     }, [selection, setLastUsedColor]);
 
     const toggleFill = useMutation(({ storage }) => {
+        if (!canEditAllSelected) return;
+
         const liveLayers = storage.get("layers") as any;
 
         selection?.forEach((id) => {
@@ -100,12 +128,14 @@ export const SelectionTools = memo(({
     }, [selection]);
 
     const setStrokeWidth = useMutation(({ storage }, width: number) => {
+        if (!canEditAllSelected) return;
+
         const liveLayers = storage.get("layers") as any;
 
         selection?.forEach((id) => {
             const layer = liveLayers.get(id);
             if (layer) {
-                layer.set("strokeWidth", width);    
+                layer.set("strokeWidth", width);
             }
         });
     }, [selection]);
@@ -129,77 +159,85 @@ export const SelectionTools = memo(({
                 )`
             }}
         >
-            <ColorPicker
-                onChange={setFill}
-            />
-
-            <div className="flex flex-col gap-y-0.5">
-                <Hint label="Bring to Front">
-                    <Button variant={"board"} size={"icon"} onClick={bringToFront}>
-                        <BringToFront />
-                    </Button>
-                </Hint>
-                <Hint label="Send to Back" side="bottom">
-                    <Button variant={"board"} size={"icon"} onClick={sendToBack}>
-                        <SendToBack />
-                    </Button>
-                </Hint>
-                {isFillableOrStrokable && (
-                    <Hint label="Toggle Fill">
-                        <Button
-                            variant={"board"}
-                            size={"icon"}
-                            onClick={toggleFill}
-                        >
-                            <BoxSelect />
-                        </Button>
-                    </Hint>
-                )}
-            </div>
-
-            {isFillableOrStrokable && (
-                <div className="flex flex-col items-center pl-2 ml-2 border-l border-neutral-200 gap-x-0.5">
-                    <Hint label="Thin">
-                        <Button
-                            onClick={() => setStrokeWidth(2)}
-                            variant="board"
-                            size="icon"
-                        >
-                            <div className="w-4 bg-black rounded-full h-0.5" />
-                        </Button>
-                    </Hint>
-                    <Hint label="Medium" side="left">
-                        <Button
-                            onClick={() => setStrokeWidth(5)}
-                            variant="board"
-                            size="icon"
-                        >
-                            <div className="w-4 bg-black rounded-full h-1" />
-                        </Button>
-                    </Hint>
-                    <Hint label="Thick" side="bottom">
-                        <Button
-                            onClick={() => setStrokeWidth(10)}
-                            variant="board"
-                            size="icon"
-                        >
-                            <div className="w-4 bg-black rounded-full h-1.5" />
-                        </Button>
-                    </Hint>
-                </div>
+            {!canEditAllSelected && (
+                <div>🔒 You cannnot change these properties</div>
             )}
 
-            <div className="flex items-center justify-center pl-2 ml-2 border-l border-neutral-200 flex-col gap-y-0.5">
-                <Hint label="Delete" side="bottom">
-                    <Button
-                        variant={"board"}
-                        size={"icon"}
-                        onClick={deleteLayers}
-                    >
-                        <Trash2 />
-                    </Button>
-                </Hint>
-            </div>
+            {canEditAllSelected && (
+                <>
+                    <ColorPicker
+                        onChange={setFill}
+                    />
+
+                    <div className="flex flex-col gap-y-0.5">
+                        <Hint label="Bring to Front">
+                            <Button variant={"board"} size={"icon"} onClick={bringToFront}>
+                                <BringToFront />
+                            </Button>
+                        </Hint>
+                        <Hint label="Send to Back" side="bottom">
+                            <Button variant={"board"} size={"icon"} onClick={sendToBack}>
+                                <SendToBack />
+                            </Button>
+                        </Hint>
+                        {isFillableOrStrokable && (
+                            <Hint label="Toggle Fill">
+                                <Button
+                                    variant={"board"}
+                                    size={"icon"}
+                                    onClick={toggleFill}
+                                >
+                                    <BoxSelect />
+                                </Button>
+                            </Hint>
+                        )}
+                    </div>
+
+                    {isFillableOrStrokable && (
+                        <div className="flex flex-col items-center pl-2 ml-2 border-l border-neutral-200 gap-x-0.5">
+                            <Hint label="Thin">
+                                <Button
+                                    onClick={() => setStrokeWidth(2)}
+                                    variant="board"
+                                    size="icon"
+                                >
+                                    <div className="w-4 bg-black rounded-full h-0.5" />
+                                </Button>
+                            </Hint>
+                            <Hint label="Medium" side="left">
+                                <Button
+                                    onClick={() => setStrokeWidth(5)}
+                                    variant="board"
+                                    size="icon"
+                                >
+                                    <div className="w-4 bg-black rounded-full h-1" />
+                                </Button>
+                            </Hint>
+                            <Hint label="Thick" side="bottom">
+                                <Button
+                                    onClick={() => setStrokeWidth(10)}
+                                    variant="board"
+                                    size="icon"
+                                >
+                                    <div className="w-4 bg-black rounded-full h-1.5" />
+                                </Button>
+                            </Hint>
+                        </div>
+                    )}
+
+                    <div className="flex items-center justify-center pl-2 ml-2 border-l border-neutral-200 flex-col gap-y-0.5">
+                        <Hint label="Delete" side="bottom">
+                            <Button
+                                variant={"board"}
+                                size={"icon"}
+                                onClick={deleteLayers}
+                            >
+                                <Trash2 />
+                            </Button>
+                        </Hint>
+                    </div>
+                </>
+            )}
         </div>
     );
 });

@@ -31,6 +31,7 @@ export type TriangleLayer = {
     value?: string;
     outlineOnly?: boolean;
     strokeWidth?: number;
+    authorId?: string;
 }
 
 export type RectangleLayer = {
@@ -43,6 +44,7 @@ export type RectangleLayer = {
     value?: string;
     outlineOnly?: boolean;
     strokeWidth?: number;
+    authorId?: string;
 };
 
 export type EllipseLayer = {
@@ -55,6 +57,7 @@ export type EllipseLayer = {
     value?: string;
     outlineOnly?: boolean;
     strokeWidth?: number;
+    authorId?: string;
 };
 
 export type PathLayer = {
@@ -66,6 +69,7 @@ export type PathLayer = {
     fill: Color;
     points: number[][];
     value?: string;
+    authorId?: string;
 };
 
 export type TextLayer = {
@@ -76,6 +80,7 @@ export type TextLayer = {
     width: number;
     fill: Color;
     value?: string;
+    authorId?: string;
 };
 
 export type LatexTextLayer = {
@@ -86,6 +91,7 @@ export type LatexTextLayer = {
     width: number;
     fill: Color;
     value?: string;
+    authorId?: string;
 };
 
 export type NoteLayer = {
@@ -96,6 +102,7 @@ export type NoteLayer = {
     width: number;
     fill: Color;
     value?: string;
+    authorId?: string;
 };
 
 export type Point = {

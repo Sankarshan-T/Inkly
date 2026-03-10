@@ -17,6 +17,7 @@ import { SelectionTools } from "./selection-tools";
 import { Path } from "./path";
 import { useDisableScrollBounds } from "@/hooks/use-disable-scroll-bounds";
 import { useDeleteLayers } from "@/hooks/use-delete-layers";
+import { RoleDisplay } from "./role-display";
 
 const MAX_LAYERS = 100;
 
@@ -27,6 +28,14 @@ interface CanvasProps {
 export const Canvas = ({
     boardId,
 }: CanvasProps) => {
+    const info = useSelf((me) => me.info);
+
+    const userRole = info?.role;
+
+    const isAdmin = userRole === "admin";
+    const isEditor = userRole === "editor";
+    const isViewer = userRole === "viewer";
+
     const layerIds = useStorage((root) => root.layerIds);
 
     const pencilDraft = useSelf((me) => me.presence.pencilDraft);
@@ -51,7 +60,7 @@ export const Canvas = ({
     const canRedo = useCanRedo();
 
     const insertlayer = useMutation((
-        { storage, setMyPresence },
+        { storage, setMyPresence, self },
         layerType: LayerType.Ellipse | LayerType.Rectangle | LayerType.Text | LayerType.Note | LayerType.Triangle | LayerType.LatexText,
         position: Point,
     ) => {
@@ -69,6 +78,7 @@ export const Canvas = ({
             height: 100,
             width: 100,
             fill: lastUsedColor,
+            authorId: self.id,
         });
 
         liveLayerIds.push(layerId);
@@ -194,7 +204,8 @@ export const Canvas = ({
             id,
             new LiveObject(penPointsToPath(
                 pencilDraft,
-                lastUsedColor
+                lastUsedColor,
+                self.id,
             )),
         );
 
@@ -313,10 +324,12 @@ export const Canvas = ({
         setMyPresence({ cursor: null });
     }, []);
 
-    const onPointerDown = useCallback((
-        e: React.PointerEvent,
-    ) => {
+    const onPointerDown = useCallback((e: React.PointerEvent) => {
         const point = pointerEventToCanvasPoint(e, camera);
+
+        if (isViewer && e.button !== 1) {
+            return;
+        }
 
         if (e.button === 1) {
             setCanvasState({ mode: CanvasMode.Panning, origin: point });
@@ -331,13 +344,27 @@ export const Canvas = ({
         }
 
         setCanvasState({ origin: point, mode: CanvasMode.Pressing });
-    }, [camera, canvasState.mode, setCanvasState, startDrawing]);
+    }, [camera, canvasState.mode, isViewer, startDrawing]);
 
     const onPointerUp = useMutation((
-        { },
+        { storage, self, setMyPresence },
         e: React.PointerEvent
     ) => {
+        const { selection } = self.presence;
+        const layers = storage.get("layers");
+        const isAdmin = self.info?.role === "admin";
+        const selfId = self.id;
         const point = pointerEventToCanvasPoint(e, camera);
+
+        if (canvasState.mode === CanvasMode.SelectionNet && selection) {
+            const filteredSelection = selection.filter((id) => {
+                if (isAdmin) return true;
+                const layer = layers.get(id);
+                return layer?.get("authorId") === selfId;
+            });
+
+            setMyPresence({ selection: filteredSelection });
+        }
 
         if (
             canvasState.mode === CanvasMode.None ||
@@ -373,10 +400,18 @@ export const Canvas = ({
     const selections = useOthersMapped((other) => other.presence.selection);
 
     const onLayerPointerDown = useMutation((
-        { self, setMyPresence },
+        { self, setMyPresence, storage },
         e: React.PointerEvent,
         layerId: string,
     ) => {
+        if (isViewer) return;
+
+        const layer = storage.get("layers").get(layerId);
+
+        if (isEditor && layer?.get("authorId") !== self.id) {
+            return;
+        }
+
         if (canvasState.mode === CanvasMode.Pencil || canvasState.mode === CanvasMode.Inserting) {
             return;
         }
@@ -387,15 +422,11 @@ export const Canvas = ({
         const point = pointerEventToCanvasPoint(e, camera);
 
         if (!self.presence.selection.includes(layerId)) {
-            if (e.shiftKey) {
-                setMyPresence({ selection: [...self.presence.selection, layerId] }, { addToHistory: true });
-            } else {
-                setMyPresence({ selection: [layerId] }, { addToHistory: true });
-            }
+            setMyPresence({ selection: [layerId] }, { addToHistory: true });
         }
 
         setCanvasState({ mode: CanvasMode.Translating, current: point });
-    }, [setCanvasState, camera, history, canvasState.mode]);
+    }, [setCanvasState, camera, history, canvasState.mode, isViewer]);
 
     const duplicateLayers = useMutation(({ storage, self, setMyPresence }) => {
         const liveLayers = storage.get("layers");
@@ -467,6 +498,7 @@ export const Canvas = ({
 
     useEffect(() => {
         function onKeyDown(e: KeyboardEvent) {
+            if (isViewer) return;
             const isTyping =
                 (document.activeElement as HTMLElement)?.isContentEditable;
 
@@ -496,7 +528,7 @@ export const Canvas = ({
 
         window.addEventListener("keydown", onKeyDown);
         return () => window.removeEventListener("keydown", onKeyDown);
-    }, [deleteLayers, history]);
+    }, [deleteLayers, history, isViewer]);
 
     const getCursor = () => {
         switch (canvasState.mode) {
@@ -525,19 +557,24 @@ export const Canvas = ({
             }}
         >
             <Info boardId={boardId} />
+            
             <Participants />
-            <Toolbar
-                canvasState={canvasState}
-                setCanvasState={setCanvasState}
-                canRedo={canRedo}
-                canUndo={canUndo}
-                undo={history.undo}
-                redo={history.redo}
-            />
-            <SelectionTools
-                camera={camera}
-                setLastUsedColor={setLastUsedColor}
-            />
+            {!isViewer && (
+                <>
+                    <Toolbar
+                        canvasState={canvasState}
+                        setCanvasState={setCanvasState}
+                        canRedo={canRedo}
+                        canUndo={canUndo}
+                        undo={history.undo}
+                        redo={history.redo}
+                    />
+                    <SelectionTools
+                        camera={camera}
+                        setLastUsedColor={setLastUsedColor}
+                    />
+                </>
+            )}
             <svg
                 className="h-screen w-screen"
                 onWheel={onWheel}

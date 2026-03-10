@@ -7,11 +7,13 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { cn } from "@/lib/utils";
 import { useRenameModal } from "@/store/use-renamemodal";
+import { useSelf } from "@liveblocks/react";
 import { useQuery } from "convex/react";
 import { Menu } from "lucide-react";
 import { Poppins } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
+import { RoleDisplay } from "./role-display";
 
 interface InfoProps {
     boardId: string;
@@ -33,6 +35,14 @@ const Separator = () => {
 export const Info = ({
     boardId,
 }: InfoProps) => {
+    const info = useSelf((me) => me.info);
+
+    const userRole = info?.role;
+
+    const isAdmin = userRole === "admin";
+    const isEditor = userRole === "editor";
+    const isViewer = userRole === "viewer";
+
     const { onOpen } = useRenameModal();
 
     const data = useQuery(api.board.get, {
@@ -42,50 +52,56 @@ export const Info = ({
     if (!data) return <InfoSkeleton />;
 
     return (
-        <div className="absolute top-2 left-2 bg-white rounded-md px-1.5 h-12 flex items-center shadow-md">
-            <Hint label="All Boards" side="bottom" sideOffset={10}>
-                <Button asChild className="px-2" variant={"board"}>
-                    <Link href={"/"}>
-                        <Image
-                            src={"/logo.svg"}
-                            alt="Board Logo"
-                            height={30}
-                            width={30}
-                        />
-                        <span className={cn(
-                            "font-semibold text-2xl ml-2 text-black",
-                            font.className,
-                        )}>
-                            Inkly
-                        </span>
-                    </Link>
-                </Button>
-            </Hint>
-            <Separator />
-            <Hint label="Edit board title" side="bottom" sideOffset={10}>
-                <Button
-                    variant={"board"}
-                    className="text-base font-normal px-2 select-none"
-                    onClick={() => onOpen(data._id, data.title)}
+        <div className="flex absolute top-2 left-2 justify-center items-center gap-x-2 ">
+            <div className="relative  px-1.5 h-12 flex items-center justify-between  bg-white/80 backdrop-blur-md rounded-2xl border border-indigo-100 shadow-xl">
+                <Hint label="All Boards" side="bottom" sideOffset={10}>
+                    <Button asChild className="px-2" variant={"board"}>
+                        <Link href={"/"}>
+                            <Image
+                                src={"/logo.svg"}
+                                alt="Board Logo"
+                                height={30}
+                                width={30}
+                            />
+                            <span className={cn(
+                                "font-semibold text-2xl ml-2 text-black",
+                                font.className,
+                            )}>
+                                Inkly
+                            </span>
+                        </Link>
+                    </Button>
+                </Hint>
+                <Separator />
+                <Hint label="Edit board title" side="bottom" sideOffset={10}>
+                    <Button
+                        variant={"board"}
+                        className="text-base font-normal px-2 select-none"
+                        onClick={() => onOpen(data._id, data.title)}
+                        disabled={isViewer || isEditor}
+                    >
+                        {data.title}
+                    </Button>
+                </Hint>
+                <Separator />
+                <Actions
+                    id={data._id}
+                    title={data.title}
+                    side="bottom"
+                    sideOffset={10}
+                    isEditor={isEditor}
+                    isViewer={isViewer}
                 >
-                    {data.title}
-                </Button>
-            </Hint>
-            <Separator />
-            <Actions
-                id={data._id}
-                title={data.title}
-                side="bottom"
-                sideOffset={10}
-            >
-                <div>
-                    <Hint label="Main menu" side="bottom" sideOffset={10}>
-                        <Button size={"icon"} variant={"board"}>
-                            <Menu />
-                        </Button>
-                    </Hint>
-                </div>
-            </Actions>
+                    <div>
+                        <Hint label="Main menu" side="bottom" sideOffset={10}>
+                            <Button size={"icon"} variant={"board"}>
+                                <Menu />
+                            </Button>
+                        </Hint>
+                    </div>
+                </Actions>
+            </div>
+            <RoleDisplay role={userRole || "viewer"} />
         </div>
     );
 };

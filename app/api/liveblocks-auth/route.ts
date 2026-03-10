@@ -10,24 +10,29 @@ const liveblocks = new Liveblocks({
     secret: process.env.LIVEBLOCKS_SECRET_KEY!,
 });
 
-export async function POST(request:Request) {
+export async function POST(request: Request) {
     const authorization = await auth();
     const user = await currentUser();
 
     if (!authorization || !user) {
-        return new Response("Unauthorized", { status : 403 });
+        return new Response("Unauthorized", { status: 403 });
     }
+
+    const { sessionClaims } = authorization;
+    const role = (sessionClaims as any)?.o?.rol;
+
 
     const { room } = await request.json();
     const board = await convex.query(api.board.get, { id: room });
 
     if (board?.orgId != authorization.orgId) {
-        return new Response("Unauthorized", { status : 403 });
+        return new Response("Unauthorized", { status: 403 });
     }
 
     const userInfo = {
         name: user.firstName || "Teammate",
         picture: user.imageUrl,
+        role: role,
     };
 
     const session = liveblocks.prepareSession(
@@ -38,8 +43,8 @@ export async function POST(request:Request) {
     if (room) {
         session.allow(room, session.FULL_ACCESS);
     }
- 
+
     const { status, body } = await session.authorize();
-     
+
     return new Response(body, { status });
 }

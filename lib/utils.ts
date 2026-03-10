@@ -117,6 +117,7 @@ export function getContrastTextColors(color: Color) {
 export function penPointsToPath(
   points: number[][],
   color: Color,
+  authorId?: string
 ): PathLayer {
   if (points.length < 2) {
     throw new Error("Cannot transform points with less than 2 points");
@@ -173,4 +174,11 @@ export function getSvgPathFromStroke(stroke: number[][]) {
 
   d.push("Z");
   return d.join(" ");
+};
+
+export const getLayerProperty = (layer: any, property: string) => {
+  if (typeof layer.get === 'function') {
+    return layer.get(property);
+  }
+  return layer[property];
 };

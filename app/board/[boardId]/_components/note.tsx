@@ -3,7 +3,7 @@ import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 import { Nerko_One } from "next/font/google";
 import React from "react";
 import { cn, colorToCss, getContrastTextColors } from "@/lib/utils";
-import { useMutation } from "@liveblocks/react";
+import { useMutation, useSelf } from "@liveblocks/react";
 
 const font = Nerko_One({
     subsets: ["latin"],
@@ -33,6 +33,12 @@ export const Note = ({
     selectionColor
 }: NoteProps) => {
     const { x, y, width, height, fill, value } = layer;
+    const self = useSelf();
+    const info = self?.info;
+    const selfId = self?.id;
+    const isAdmin = info?.role === "admin" || info?.role === "org:admin";
+
+    const isReadOnly = !isAdmin && layer.authorId !== selfId;
 
     const updateValue = useMutation((
         { storage },
@@ -44,6 +50,7 @@ export const Note = ({
     }, []);
 
     const handleContentChange = (e: ContentEditableEvent) => {
+        if (isReadOnly) return;
         updateValue(e.target.value);
     };
 
@@ -66,7 +73,9 @@ export const Note = ({
                 html={value || "Text"}
                 onChange={handleContentChange}
                 className={cn(
-                    "h-full w-full flex items-center justify-center text-center outline-none", font.className
+                    "h-full w-full flex items-center justify-center text-center outline-none",
+                    isReadOnly && "pointer-events-none",
+                    font.className
                 )}
                 style={{
                     fontSize: calculateFontSize(width, height),

@@ -5,7 +5,7 @@ import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 import { Nerko_One } from "next/font/google";
 import React from "react";
 import { cn, colorToCss } from "@/lib/utils";
-import { useMutation } from "@liveblocks/react";
+import { useMutation, useSelf } from "@liveblocks/react";
 import "katex/dist/katex.min.css";
 import { InlineMath } from "react-katex";
 
@@ -29,6 +29,13 @@ export const LatexText = ({
 }: TextProps) => {
     const { x, y, width, height, fill, value } = layer;
     const MAX_WIDTH = 400;
+
+    const self = useSelf();
+    const info = self?.info;
+    const selfId = self?.id;
+    const isAdmin = info?.role === "admin" || info?.role === "org:admin";
+
+    const isReadOnly = !isAdmin && layer.authorId !== selfId;
 
     const [editing, setEditing] = React.useState(false);
 
@@ -161,8 +168,15 @@ export const LatexText = ({
                 />
             ) : (
                 <div
-                    onClick={() => setEditing(true)}
-                    className={cn("w-full h-full cursor-text", font.className)}
+                    onClick={() => {
+                        if (isReadOnly) return;
+                        setEditing(true);
+                    }}
+                    className={cn(
+                        "w-full h-full",
+                        isReadOnly ? "cursor-not-allowed" : "cursor-text",
+                        font.className
+                    )}
                     style={{
                         fontSize: 48,
                         lineHeight: 1.2,

@@ -3,7 +3,7 @@ import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 import { Nerko_One } from "next/font/google";
 import React from "react";
 import { cn, colorToCss } from "@/lib/utils";
-import { useMutation } from "@liveblocks/react";
+import { useMutation, useSelf } from "@liveblocks/react";
 
 const font = Nerko_One({
     subsets: ["latin"],
@@ -35,6 +35,12 @@ export const Text = ({
     const { x, y, width, height, fill, value } = layer;
     const MAX_WIDTH = 400;
 
+    const self = useSelf();
+    const info = self?.info;
+    const selfId = self?.id;
+    const isAdmin = info?.role === "admin" || info?.role === "org:admin";
+
+    const isReadOnly = !isAdmin && layer.authorId !== selfId;
 
     const updateValue = useMutation((
         { storage },
@@ -108,6 +114,11 @@ export const Text = ({
                     "w-full h-full drop-shadow-md outline-none",
                     font.className
                 )}
+                onMouseDown={(e: any) => {
+                    if (isReadOnly) {
+                        e.preventDefault();
+                    }
+                }}
                 style={{
                     fontSize: 48,
                     lineHeight: 1.2,

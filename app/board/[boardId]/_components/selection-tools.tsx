@@ -9,7 +9,6 @@ import { useDeleteLayers } from "@/hooks/use-delete-layers";
 import { Hint } from "@/components/hint";
 import { Button } from "@/components/ui/button";
 import { BringToFront, SendToBack, Trash2, BoxSelect } from "lucide-react";
-import { getLayerProperty } from "@/lib/utils";
 
 interface SelectionToolsProps {
     camera: Camera;
@@ -38,7 +37,13 @@ export const SelectionTools = memo(({
 
         return selection.every((id) => {
             const layer = liveLayers.get(id);
-            return getLayerProperty(layer, "authorId") === selfId;
+            if (!layer) return false;
+
+            const authorId = typeof (layer as any).get === 'function'
+                ? (layer as any).get("authorId")
+                : (layer as any).authorId;
+
+            return authorId === selfId;
         });
     }, [selection, liveLayers, isAdmin, selfId]);
 

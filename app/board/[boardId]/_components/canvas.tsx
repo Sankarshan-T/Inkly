@@ -1,25 +1,50 @@
 "use client";
 
+import { Path } from "./path";
 import { Info } from "./info";
+import { nanoid } from "nanoid";
 import { Toolbar } from "./toolbar";
 import { Participants } from "./participants";
-import { nanoid } from "nanoid";
-
-import { useHistory, useCanUndo, useCanRedo, useMutation, useStorage, useOthersMapped, useSelf } from "@liveblocks/react";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { CanvasState, CanvasMode, Camera, Color, LayerType, Point, Side, XYWH } from "@/types/canvas";
-import { CursorsPresence } from "./cursors-presence";
-import { cn, colorToCss, connectionIdToColor, findIntersectingLayersWithRectangle, penPointsToPath, pointerEventToCanvasPoint, resizeBounds } from "@/lib/utils";
-import { LiveObject } from "@liveblocks/client";
-import { LayerPreview } from "./layer-preview";
 import { SelectionBox } from "./selection-box";
+import { LayerPreview } from "./layer-preview";
+import { LiveObject } from "@liveblocks/client";
 import { SelectionTools } from "./selection-tools";
-import { Path } from "./path";
-import { useDisableScrollBounds } from "@/hooks/use-disable-scroll-bounds";
+import { CursorsPresence } from "./cursors-presence";
 import { useDeleteLayers } from "@/hooks/use-delete-layers";
-import { RoleDisplay } from "./role-display";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useDisableScrollBounds } from "@/hooks/use-disable-scroll-bounds";
 
-const MAX_LAYERS = 100;
+import {
+    useHistory,
+    useCanUndo,
+    useCanRedo,
+    useMutation,
+    useStorage,
+    useOthersMapped,
+    useSelf
+} from "@liveblocks/react";
+
+import {
+    colorToCss,
+    connectionIdToColor,
+    findIntersectingLayersWithRectangle,
+    penPointsToPath,
+    pointerEventToCanvasPoint,
+    resizeBounds
+} from "@/lib/utils";
+
+import {
+    CanvasState,
+    CanvasMode,
+    Camera,
+    Color,
+    LayerType,
+    Point,
+    Side,
+    XYWH
+} from "@/types/canvas";
+
+const MAX_LAYERS = 1000;
 
 interface CanvasProps {
     boardId: string;
@@ -32,7 +57,6 @@ export const Canvas = ({
 
     const userRole = info?.role;
 
-    const isAdmin = userRole === "admin";
     const isEditor = userRole === "editor";
     const isViewer = userRole === "viewer";
 
@@ -45,6 +69,10 @@ export const Canvas = ({
     });
 
     const [camera, setCamera] = useState<Camera>({ x: 0, y: 0, zoom: 1 });
+
+    const selections = useOthersMapped((other) => other.presence.selection);
+
+    const deleteLayers = useDeleteLayers();
 
     const [lastUsedColor, setLastUsedColor] = useState<Color>({
         r: 25,
@@ -397,7 +425,6 @@ export const Canvas = ({
         setCanvasState,
     ]);
 
-    const selections = useOthersMapped((other) => other.presence.selection);
 
     const onLayerPointerDown = useMutation((
         { self, setMyPresence, storage },
@@ -470,7 +497,23 @@ export const Canvas = ({
         return layerIdsToColorSelection;
     }, [selections])
 
-    const deleteLayers = useDeleteLayers();
+    const getCursor = () => {
+        switch (canvasState.mode) {
+            case CanvasMode.Panning:
+            case CanvasMode.Translating:
+                return "cursor-grabbing";
+            case CanvasMode.Inserting:
+                return "cursor-crosshair";
+            case CanvasMode.Resizing:
+                return "cursor-nwse-resize";
+            case CanvasMode.Line:
+                return "cursor-crosshair";
+            case CanvasMode.Pencil:
+                return "cursor-crosshair";
+            default:
+                return "cursor-default";
+        }
+    };
 
     useEffect(() => {
         const handleWheel = (e: WheelEvent) => {
@@ -530,24 +573,6 @@ export const Canvas = ({
         return () => window.removeEventListener("keydown", onKeyDown);
     }, [deleteLayers, history, isViewer]);
 
-    const getCursor = () => {
-        switch (canvasState.mode) {
-            case CanvasMode.Panning:
-            case CanvasMode.Translating:
-                return "cursor-grabbing";
-            case CanvasMode.Inserting:
-                return "cursor-crosshair";
-            case CanvasMode.Resizing:
-                return "cursor-nwse-resize";
-            case CanvasMode.Line:
-                return "cursor-crosshair";
-            case CanvasMode.Pencil:
-                return "cursor-crosshair";
-            default:
-                return "cursor-default";
-        }
-    };
-
     return (
         <main
             className={`h-full w-full relative touch-none bg-[radial-gradient(#e5e7eb_2px,transparent_2px)] bg-size-[30px_30px] ${getCursor()}`}
@@ -557,7 +582,7 @@ export const Canvas = ({
             }}
         >
             <Info boardId={boardId} />
-            
+
             <Participants />
             {!isViewer && (
                 <>

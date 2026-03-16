@@ -1,8 +1,8 @@
 "use client";
 
-import { Circle, Infinity, MousePointer2, Pencil, Pi, Redo2, ScreenShare, Slash, Square, StickyNote, Trash2, Triangle, Type, Undo2 } from "lucide-react";
+import { Circle, MousePointer2, Pencil, Pi, Redo2, Slash, Square, StickyNote, Trash2, Triangle, Type, Undo2 } from "lucide-react";
 import { ToolButton } from "./tool-button";
-import { CanvasMode, CanvasSizeMode, CanvasState, LayerType } from "@/types/canvas";
+import { CanvasMode, CanvasState, LayerType } from "@/types/canvas";
 import { useClearCanvas } from "@/hooks/use-clear-canvas";
 import { useStorage } from "@liveblocks/react";
 import { ConfirmationBox } from "@/components/confirmation-box";

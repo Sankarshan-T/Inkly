@@ -36,7 +36,7 @@ export type TriangleLayer = {
 
 export type RectangleLayer = {
     type: LayerType.Rectangle;
-    x: number;  
+    x: number;
     y: number;
     height: number;
     width: number;
@@ -127,7 +127,7 @@ export enum Side {
 export type CanvasState =
     | {
         mode: CanvasMode.None;
-    } 
+    }
     | {
         mode: CanvasMode.Panning,
         origin: Point;

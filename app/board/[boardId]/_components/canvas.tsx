@@ -11,8 +11,14 @@ import { LiveObject } from "@liveblocks/client";
 import { SelectionTools } from "./selection-tools";
 import { CursorsPresence } from "./cursors-presence";
 import { useDeleteLayers } from "@/hooks/use-delete-layers";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDisableScrollBounds } from "@/hooks/use-disable-scroll-bounds";
+
+import React, {
+    useCallback,
+    useEffect,
+    useMemo,
+    useState
+} from "react";
 
 import {
     useHistory,

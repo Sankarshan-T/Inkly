@@ -1,10 +1,11 @@
 "use client";
 
-import { Circle, MousePointer2, Pencil, Pi, Redo2, Slash, Square, StickyNote, Trash2, Triangle, Type, Undo2 } from "lucide-react";
+import { Circle, Infinity, MousePointer2, Pencil, Pi, Redo2, ScreenShare, Slash, Square, StickyNote, Trash2, Triangle, Type, Undo2 } from "lucide-react";
 import { ToolButton } from "./tool-button";
-import { CanvasMode, CanvasState, LayerType } from "@/types/canvas";
+import { CanvasMode, CanvasSizeMode, CanvasState, LayerType } from "@/types/canvas";
 import { useClearCanvas } from "@/hooks/use-clear-canvas";
 import { useStorage } from "@liveblocks/react";
+import { ConfirmationBox } from "@/components/confirmation-box";
 
 interface ToolbarProps {
     canvasState: CanvasState;
@@ -25,6 +26,7 @@ export const Toolbar = ({
 }: ToolbarProps) => {
     const clearCanvas = useClearCanvas();
     const isEmpty = useStorage((root) => root.layerIds.length === 0);
+
     return (
         <div className="absolute top-[50%] -translate-y-[50%] left-2 flex flex-col rounded-2xl gap-y-4 ">
             <div className=" p-1.5 flex gap-y-1 flex-col items-center bg-white/80 backdrop-blur-md rounded-2xl border border-indigo-100 shadow-xl">
@@ -158,12 +160,17 @@ export const Toolbar = ({
                     isDisabled={!canRedo}
                 />
 
-                <ToolButton
-                    label="Clear Canvas"
-                    icon={Trash2}
-                    onClick={clearCanvas}
-                    isDisabled={isEmpty || undefined}
-                />
+                <ConfirmationBox
+                    onConfirm={clearCanvas}
+                    header="Are you sure you want to clear? This action is irreversible"
+                >
+                    <ToolButton
+                        label="Clear Canvas"
+                        icon={Trash2}
+                        onClick={() => { }}
+                        isDisabled={isEmpty || undefined}
+                    />
+                </ConfirmationBox>
             </div>
         </div>
     );

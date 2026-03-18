@@ -47,9 +47,7 @@ import {
     LayerType,
     Point,
     Side,
-    XYWH,
-    Viewport,
-    ViewportMode
+    XYWH
 } from "@/types/canvas";
 
 const MAX_LAYERS = 1000;
@@ -76,10 +74,6 @@ export const Canvas = ({
         mode: CanvasMode.None,
     });
 
-    const [viewportState, setViewport] = useState<Viewport>({
-        mode: ViewportMode.Infinite | ViewportMode.SinglePage
-    })
-
     const [camera, setCamera] = useState<Camera>({ x: 0, y: 0, zoom: 1 });
 
     const selections = useOthersMapped((other) => other.presence.selection);
@@ -91,6 +85,7 @@ export const Canvas = ({
         g: 114,
         b: 120,
     });
+
 
     useDisableScrollBounds();
 
@@ -371,11 +366,8 @@ export const Canvas = ({
         }
 
         if (e.button === 1) {
-            if (viewportState.mode === ViewportMode.SinglePage) return;
-            else {
-                setCanvasState({ mode: CanvasMode.Panning, origin: point });
-                return;
-            }
+            setCanvasState({ mode: CanvasMode.Panning, origin: point });
+            return;
         }
 
         if (canvasState.mode === CanvasMode.Inserting) return;
@@ -589,7 +581,7 @@ export const Canvas = ({
 
     return (
         <main
-            className={`h-full w-full relative ${getCursor()}`}
+            className={`h-full w-full relative touch-none bg-[radial-gradient(#e5e7eb_2px,transparent_2px)] bg-size-[30px_30px] ${getCursor()}`}
             style={{
                 touchAction: 'none',
                 overscrollBehavior: 'none'
@@ -602,8 +594,6 @@ export const Canvas = ({
                 <>
                     <Toolbar
                         canvasState={canvasState}
-                        viewportState={viewportState}
-                        setViewport={setViewport}
                         setCanvasState={setCanvasState}
                         canRedo={canRedo}
                         canUndo={canUndo}
@@ -617,8 +607,8 @@ export const Canvas = ({
                 </>
             )}
             <svg
-                className="h-screen w-screen touch-none bg-[radial-gradient(#e5e7eb_2px,transparent_2px)] bg-size-[30px_30px]"
-                onWheel={viewportState.mode === ViewportMode.Infinite ? onWheel : () => { }}
+                className="h-screen w-screen"
+                onWheel={onWheel}
                 onPointerMove={onPointerMove}
                 onPointerDown={onPointerDown}
                 onPointerLeave={onPointerLeave}

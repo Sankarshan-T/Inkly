@@ -1,17 +1,15 @@
 "use client";
 
-import { Circle, Infinity, MousePointer2, Pencil, Pi, RectangleHorizontal, Redo2, Slash, Square, StickyNote, Trash2, Triangle, Type, Undo2 } from "lucide-react";
+import { Circle, MousePointer2, Pencil, Pi, Redo2, Slash, Square, StickyNote, Trash2, Triangle, Type, Undo2 } from "lucide-react";
 import { ToolButton } from "./tool-button";
-import { CanvasMode, CanvasState, LayerType, Viewport, ViewportMode } from "@/types/canvas";
+import { CanvasMode, CanvasState, LayerType } from "@/types/canvas";
 import { useClearCanvas } from "@/hooks/use-clear-canvas";
 import { useStorage } from "@liveblocks/react";
 import { ConfirmationBox } from "@/components/confirmation-box";
 
 interface ToolbarProps {
     canvasState: CanvasState;
-    viewportState: Viewport;
     setCanvasState: (newState: CanvasState) => void;
-    setViewport: (newState: Viewport) => void;
     undo: () => void;
     redo: () => void;
     canUndo: boolean;
@@ -20,9 +18,7 @@ interface ToolbarProps {
 
 export const Toolbar = ({
     canvasState,
-    viewportState,
     setCanvasState,
-    setViewport,
     undo,
     redo,
     canUndo,
@@ -33,29 +29,6 @@ export const Toolbar = ({
 
     return (
         <div className="absolute top-[50%] -translate-y-[50%] left-2 flex flex-col rounded-2xl gap-y-4 ">
-            <div className="p-1.5 flex gap-y-1 flex-col items-center bg-white/80 backdrop-blur-xl rounded-2xl border border-indigo-100 shadow-xl">
-                <ToolButton
-                    label="Infinite mode"
-                    icon={Infinity}
-                    onClick={() => setViewport({
-                        mode: ViewportMode.Infinite,
-                    })}
-                    isActive={
-                        viewportState.mode === ViewportMode.Infinite
-                    }
-                />
-
-                <ToolButton
-                    label="Single Page mode"
-                    icon={RectangleHorizontal}
-                    onClick={() => setViewport({
-                        mode: ViewportMode.SinglePage,
-                    })}
-                    isActive={
-                        viewportState.mode === ViewportMode.SinglePage
-                    }
-                />
-            </div>
             <div className=" p-1.5 flex gap-y-1 flex-col items-center bg-white/80 backdrop-blur-md rounded-2xl border border-indigo-100 shadow-xl">
                 <ToolButton
                     label="Select"
@@ -189,8 +162,7 @@ export const Toolbar = ({
 
                 <ConfirmationBox
                     onConfirm={clearCanvas}
-                    description="This action is irreversible"
-                    header="Are you sure you want to clear?"
+                    header="Are you sure you want to clear? This action is irreversible"
                 >
                     <ToolButton
                         label="Clear Canvas"

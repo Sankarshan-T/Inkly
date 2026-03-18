@@ -21,6 +21,15 @@ export enum LayerType {
     LatexText,
 };
 
+export type Viewport = {
+    mode: ViewportMode.Infinite | ViewportMode.SinglePage
+}
+
+export enum ViewportMode {
+    "Infinite",
+    "SinglePage",
+}
+
 export type TriangleLayer = {
     type: LayerType.Triangle;
     x: number;

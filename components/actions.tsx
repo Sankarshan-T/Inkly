@@ -24,8 +24,8 @@ interface ActionsProps {
     sideOffset?: DropdownMenuContentProps["sideOffset"];
     id: string;
     title: string;
-    isViewer: boolean;
-    isEditor: boolean;
+    isViewer?: boolean;
+    isEditor?: boolean;
 };
 
 export const Actions = ({

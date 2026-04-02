@@ -199,7 +199,7 @@ export const Toolbar = ({
                                                 <Check className="h-8 w-8 text-indigo-600 drop-shadow-sm" />
                                             </div>
                                         )}
-                                    </div>
+                                    </div>www
                                     <span className={`text-[10px] font-bold uppercase tracking-wider ${bgMode === mode ? "text-indigo-600" : "text-neutral-500"
                                         }`}>
                                         {BG_CONFIG[mode].name}
@@ -242,6 +242,6 @@ export const Toolbar = ({
 
 export const ToolbarSkeleton = () => {
     return (
-        <div className="absolute top-[50%] -translate-y-[50%] left-2 flex flex-col gap-y-4 bg-white h-[450px] w-14 shadow-xl rounded-2xl border border-neutral-200 animate-pulse" />
+        <div className="absolute top-[50%] -translate-y-[50%] left-2 flex flex-col gap-y-4 bg-white h-112.5 w-14 shadow-xl rounded-2xl border border-neutral-200 animate-pulse" />
     );
 };

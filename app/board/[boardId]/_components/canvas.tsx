@@ -47,7 +47,8 @@ import {
     LayerType,
     Point,
     Side,
-    XYWH
+    XYWH,
+    BackgroundMode
 } from "@/types/canvas";
 
 const MAX_LAYERS = 1000;
@@ -65,6 +66,9 @@ export const Canvas = ({
 
     const isEditor = userRole === "editor";
     const isViewer = userRole === "viewer";
+
+    const [bgMode, setBgMode] = useState<BackgroundMode>("dots");
+    const getBgClass = () => BG_PATTERNS[bgMode] || "bg-white";
 
     const layerIds = useStorage((root) => root.layerIds);
 
@@ -85,6 +89,19 @@ export const Canvas = ({
         g: 114,
         b: 120,
     });
+
+    const BG_PATTERNS: Record<BackgroundMode, string> = {
+        dots: "bg-[radial-gradient(#94a3b8_2px,transparent_2px)] bg-[size:30px_30px]",
+        grid: "bg-[linear-gradient(to_right,#64748b40_1.5px,transparent_1.5px),linear-gradient(to_bottom,#64748b40_1.5px,transparent_1.5px)] bg-[size:40px_40px]",
+        blueprint: "bg-[#1a365d] bg-[linear-gradient(to_right,#ffffff20_1px,transparent_1px),linear-gradient(to_bottom,#ffffff20_1px,transparent_1px)] bg-[size:40px_40px]",
+        legal: "bg-[#fef9c3] bg-[linear-gradient(#94a3b8_1px,transparent_1px)] bg-[size:100%_24px]",
+        graph: "bg-white bg-[linear-gradient(#cbd5e1_1.5px,transparent_1.5px),linear-gradient(90deg,#cbd5e1_1.5px,transparent_1.5px),linear-gradient(#f1f5f9_1px,transparent_1px),linear-gradient(90deg,#f1f5f9_1px,transparent_1px)] bg-[size:100px_100px,100px_100px,20px_20px,20px_20px]",
+        isometric: "bg-white bg-[radial-gradient(#64748b_1.5px,transparent_1.5px),radial-gradient(#64748b_1.5px,transparent_1.5px)] bg-[size:40px_40px] [background-position:0_0,20px_20px]",
+        carbon: "bg-[#121212] bg-[repeating-linear-gradient(45deg,#1f1f1f_0,#1f1f1f_1px,transparent_0,transparent_10px)]",
+        slate: "bg-[#f8fafc]",
+        paper: "bg-[#faf9f6] [background-image:url('https://www.transparenttextures.com/patterns/felt.png')]",
+        notebook: "bg-white bg-[linear-gradient(90deg,transparent_79px,#ef4444_2px,transparent_81px),linear-gradient(#cbd5e1_1px,transparent_0)] bg-[size:100%_1.5em]"
+    };
 
 
     useDisableScrollBounds();
@@ -581,7 +598,7 @@ export const Canvas = ({
 
     return (
         <main
-            className={`h-full w-full relative touch-none bg-[radial-gradient(#e5e7eb_2px,transparent_2px)] bg-size-[30px_30px] ${getCursor()}`}
+            className={`h-full w-full relative touch-none transition-colors duration-500 ${getBgClass()} ${getCursor()}`}
             style={{
                 touchAction: 'none',
                 overscrollBehavior: 'none'
@@ -599,6 +616,8 @@ export const Canvas = ({
                         canUndo={canUndo}
                         undo={history.undo}
                         redo={history.redo}
+                        bgMode={bgMode}
+                        setBgMode={setBgMode}
                     />
                     <SelectionTools
                         camera={camera}

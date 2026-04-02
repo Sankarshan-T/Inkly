@@ -10,6 +10,10 @@ export type Camera = {
     zoom: number;
 };
 
+export type BackgroundMode =
+    | "dots" | "grid" | "blueprint" | "legal" | "graph"
+    | "isometric" | "carbon" | "slate" | "paper" | "notebook";
+
 export enum LayerType {
     Rectangle,
     Ellipse,

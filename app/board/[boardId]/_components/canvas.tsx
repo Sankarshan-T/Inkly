@@ -98,6 +98,7 @@ export const Canvas = ({
         notebook: "bg-white bg-[linear-gradient(90deg,transparent_79px,#ef4444_2px,transparent_81px),linear-gradient(#cbd5e1_1px,transparent_0)] bg-[size:100%_1.5em]"
     };
 
+
     useDisableScrollBounds();
     const history = useHistory();
     const canUndo = useCanUndo();
@@ -241,22 +242,26 @@ export const Canvas = ({
         }
 
         const id = nanoid();
-        liveLayers.set(
-            id,
-            new LiveObject(penPointsToPath(
-                pencilDraft,
-                lastUsedColor,
-                self.id,
-            )),
+
+        const pathData = penPointsToPath(
+            pencilDraft,
+            lastUsedColor,
+            self.id,
         );
+
+        const layer = new LiveObject({
+            ...pathData,
+            type: LayerType.Path,
+        } as any);
 
         const liveLayerIds = storage.get("layerIds");
         liveLayerIds.push(id);
+        liveLayers.set(id, layer);
 
         setMyPresence({ pencilDraft: null });
-        setCanvasState({ mode: canvasState.mode as any });
+        setCanvasState({ mode: canvasState.mode } as any);
 
-    }, [lastUsedColor, canvasState]);
+    }, [lastUsedColor, canvasState.mode]);
 
     const startDrawing = useMutation((
         { setMyPresence },
@@ -395,13 +400,16 @@ export const Canvas = ({
             return;
         }
 
-        if (canvasState.mode === CanvasMode.Pencil || canvasState.mode === CanvasMode.Line) {
+        if (
+            canvasState.mode === CanvasMode.Pencil ||
+            canvasState.mode === CanvasMode.Line
+        ) {
             startDrawing(point, e.pressure);
             return;
         }
 
         setCanvasState({ origin: point, mode: CanvasMode.Pressing });
-    }, [camera, canvasState, isViewer, startDrawing, setCanvasState]);
+    }, [camera, canvasState, isViewer, startDrawing]);
 
     const onPointerUp = useMutation((
         { storage, self, setMyPresence },
@@ -462,7 +470,6 @@ export const Canvas = ({
         insertlayer,
         unselectLayers,
         insertPath,
-        setCanvasState,
     ]);
 
     const onLayerPointerDown = useMutation((
@@ -493,7 +500,7 @@ export const Canvas = ({
         }
 
         setCanvasState({ mode: CanvasMode.Translating, current: point });
-    }, [setCanvasState, camera, history, canvasState.mode, isViewer]);
+    }, [camera, history, canvasState.mode, isViewer]);
 
     const duplicateLayers = useMutation(({ storage, self, setMyPresence }) => {
         const liveLayers = storage.get("layers");
@@ -663,6 +670,45 @@ export const Canvas = ({
                                                     fill={fill} stroke="#3b82f6" strokeWidth="1"
                                                 />
                                             );
+                                        case LayerType.Diamond:
+                                            return (
+                                                <polygon
+                                                    points={`${x + width / 2},${y} ${x + width},${y + height / 2} ${x + width / 2},${y + height} ${x},${y + height / 2}`}
+                                                    fill={fill} stroke="#3b82f6" strokeWidth="1"
+                                                />
+                                            );
+                                        case LayerType.Pentagon:
+                                            return (
+                                                <polygon
+                                                    points={`${x + width * 0.5},${y} ${x + width},${y + height * 0.38} ${x + width * 0.81},${y + height} ${x + width * 0.19},${y + height} ${x},${y + height * 0.38}`}
+                                                    fill={fill} stroke="#3b82f6" strokeWidth="1"
+                                                />
+                                            );
+                                        case LayerType.Hexagon:
+                                            return (
+                                                <polygon
+                                                    points={`${x + width * 0.25},${y} ${x + width * 0.75},${y} ${x + width},${y + height * 0.5} ${x + width * 0.75},${y + height} ${x + width * 0.25},${y + height} ${x},${y + height * 0.5}`}
+                                                    fill={fill} stroke="#3b82f6" strokeWidth="1"
+                                                />
+                                            );
+                                        case LayerType.Star:
+                                            return (
+                                                <polygon
+                                                    points={`
+                                                        ${x + width * 0.5},${y} 
+                                                        ${x + width * 0.63},${y + height * 0.38} 
+                                                        ${x + width},${y + height * 0.38} 
+                                                        ${x + width * 0.69},${y + height * 0.59} 
+                                                        ${x + width * 0.82},${y + height} 
+                                                        ${x + width * 0.5},${y + height * 0.75} 
+                                                        ${x + width * 0.18},${y + height} 
+                                                        ${x + width * 0.31},${y + height * 0.59} 
+                                                        ${x},${y + height * 0.38} 
+                                                        ${x + width * 0.37},${y + height * 0.38}
+                                                    `}
+                                                    fill={fill} stroke="#3b82f6" strokeWidth="1"
+                                                />
+                                            );
                                         case LayerType.Note:
                                             return (
                                                 <rect
@@ -670,7 +716,6 @@ export const Canvas = ({
                                                     fill="#fef08a" stroke="#eab308" strokeWidth="1"
                                                 />
                                             );
-                                        // Add more cases for Diamond, Star, etc. as needed
                                         default:
                                             return (
                                                 <rect

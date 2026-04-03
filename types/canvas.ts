@@ -22,13 +22,11 @@ export enum LayerType {
     Pentagon,
     Hexagon,
     Star,
-    Arrow,
-    Line,
     Text,
     Note,
     LatexText,
     Path,
-};
+}
 
 export type RectangleLayer = {
     type: LayerType.Rectangle;
@@ -101,16 +99,6 @@ export type StarLayer = {
 
 export type PentagonLayer = {
     type: LayerType.Pentagon;
-    x: number;
-    y: number;
-    height: number;
-    width: number;
-    fill: Color;
-    authorId?: string;
-};
-
-export type ArrowLayer = {
-    type: LayerType.Arrow;
     x: number;
     y: number;
     height: number;
@@ -207,7 +195,7 @@ export type CanvasState =
         mode: CanvasMode.Pressing,
         origin: Point,
         current?: Point,
-        layerType?: LayerType // This is the key for click-and-drag
+        layerType?: LayerType
     }
     | {
         mode: CanvasMode.Resizing,
@@ -226,5 +214,4 @@ export type Layer =
     | DiamondLayer
     | HexagonLayer
     | StarLayer
-    | PentagonLayer
-    | ArrowLayer;
+    | PentagonLayer;

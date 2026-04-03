@@ -20,7 +20,6 @@ interface LayerPreviewProps {
     isDrawing: boolean;
 }
 
-
 export const LayerPreview = memo(({
     id,
     onLayerPointerDown,
@@ -80,7 +79,6 @@ export const LayerPreview = memo(({
                     selectionColor={selectionColor}
                 />
             )
-
         case LayerType.LatexText:
             return (
                 <LatexText
@@ -93,7 +91,6 @@ export const LayerPreview = memo(({
                     selectionColor={selectionColor}
                 />
             )
-
         case LayerType.Ellipse:
             return (
                 <Ellipse
@@ -157,24 +154,6 @@ export const LayerPreview = memo(({
                         `}
                 />
             );
-        case LayerType.Arrow:
-            return (
-                <Polygon
-                    id={id}
-                    layer={layer}
-                    selectionColor={selectionColor}
-                    onPointerDown={(e) => onLayerPointerDown(e, id)}
-                    points={`
-                            0,${layer.height * 0.4} 
-                            ${layer.width * 0.6},${layer.height * 0.4} 
-                            ${layer.width * 0.6},0 
-                            ${layer.width},${layer.height * 0.5} 
-                            ${layer.width * 0.6},${layer.height} 
-                            ${layer.width * 0.6},${layer.height * 0.6} 
-                            0,${layer.height * 0.6}
-                        `}
-                />
-            );
         case LayerType.Rectangle:
             return (
                 <Rectangle
@@ -188,7 +167,8 @@ export const LayerPreview = memo(({
                 />
             );
         default:
-            console.warn("Unknown layer")
+            console.warn("Unknown layer type");
+            return null;
     }
 });
 

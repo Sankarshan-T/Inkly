@@ -21,7 +21,6 @@ import {
     LineSquiggle,
     Diamond,
     Hexagon,
-    ArrowUpRight,
     Star,
     Pentagon,
 } from "lucide-react";
@@ -180,7 +179,6 @@ export const Toolbar = ({
                                         LayerType.Hexagon,
                                         LayerType.Pentagon,
                                         LayerType.Star,
-                                        LayerType.Arrow
                                     ].includes(canvasState.layerType!)
                                 }
                             />
@@ -214,12 +212,9 @@ export const Toolbar = ({
                         <DropdownMenuItem onClick={() => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.Star })}>
                             <Star className="h-4 w-4 mr-2" /> Star
                         </DropdownMenuItem>
-
-                        <DropdownMenuItem onClick={() => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.Arrow })}>
-                            <ArrowUpRight className="h-4 w-4 mr-2" /> Arrow
-                        </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
+
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <div className="relative">

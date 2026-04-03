@@ -6,7 +6,6 @@ import { Nerko_One } from "next/font/google";
 import React from "react";
 import { cn, colorToCss } from "@/lib/utils";
 import { useMutation, useSelf } from "@liveblocks/react";
-import "katex/dist/katex.min.css";
 import { InlineMath } from "react-katex";
 
 const font = Nerko_One({
@@ -51,7 +50,7 @@ export const LatexText = ({
     };
 
     const updateValue = useMutation(({ storage }, newValue: string) => {
-        const liveLayers = storage.get("layers");
+        const liveLayers = storage.get("layers") as any;
         liveLayers.get(id)?.set("value", newValue);
     }, []);
 
@@ -71,16 +70,24 @@ export const LatexText = ({
     }, []);
 
     const handleContentChange = (e: ContentEditableEvent) => {
-        const text = e.target.value;
-        updateValue(text);
+        const rawHtml = e.target.value;
+        const sanitizedText = rawHtml
+            .replace(/<div[^>]*>/g, "\n")
+            .replace(/<\/div>/g, "")
+            .replace(/<p[^>]*>/g, "\n")
+            .replace(/<\/p>/g, "")
+            .replace(/<br\s*\/?>/g, "\n")
+            .replace(/&nbsp;/g, " ");
 
         const fontSize = 48;
-        const textWidth = measureTextWidth(text, fontSize);
+        const textWidth = measureTextWidth(sanitizedText, fontSize);
         const lineHeight = fontSize * 1.2;
-        const lines = Math.ceil(textWidth / MAX_WIDTH);
-        const currentLines = Math.round((height - 10) / lineHeight);
-        const newHeight = lines > currentLines ? lines * lineHeight + 10 : height;
+        const lines = Math.ceil(textWidth / MAX_WIDTH) || 1;
+
         const newWidth = Math.min(textWidth + 20, MAX_WIDTH);
+        const newHeight = Math.max(height, lines * lineHeight + 10);
+
+        updateValue(sanitizedText);
         updateSize(newWidth, newHeight);
     };
 

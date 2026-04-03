@@ -128,7 +128,7 @@ export const Toolbar = ({
                     }
                 />
 
-                <div className="h-px w-8 bg-indigo-700 my-1 " />
+                <div className="h-px w-8 bg-neutral-900 my-1 " />
 
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -240,7 +240,7 @@ export const Toolbar = ({
                     </DropdownMenuContent>
                 </DropdownMenu>
 
-                <div className="h-px w-[80%] bg-indigo-700 my-1" />
+                <div className="h-px w-[80%] bg-neutral-900 my-1" />
 
                 <Dialog>
                     <DialogTrigger asChild>

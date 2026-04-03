@@ -44,7 +44,7 @@ export const Note = ({
         { storage },
         newValue: string,
     ) => {
-        const liveLayers = storage.get("layers");
+        const liveLayers = storage.get("layers") as any;
 
         liveLayers.get(id)?.set("value", newValue);
     }, []);

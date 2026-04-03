@@ -61,9 +61,7 @@ export const Canvas = ({
     boardId,
 }: CanvasProps) => {
     const info = useSelf((me) => me.info);
-
     const userRole = info?.role;
-
     const isEditor = userRole === "editor";
     const isViewer = userRole === "viewer";
 
@@ -71,7 +69,6 @@ export const Canvas = ({
     const getBgClass = () => BG_PATTERNS[bgMode] || "bg-white";
 
     const layerIds = useStorage((root) => root.layerIds);
-
     const pencilDraft = useSelf((me) => me.presence.pencilDraft);
 
     const [canvasState, setCanvasState] = useState<CanvasState>({
@@ -79,9 +76,7 @@ export const Canvas = ({
     });
 
     const [camera, setCamera] = useState<Camera>({ x: 0, y: 0, zoom: 1 });
-
     const selections = useOthersMapped((other) => other.presence.selection);
-
     const deleteLayers = useDeleteLayers();
 
     const [lastUsedColor, setLastUsedColor] = useState<Color>({
@@ -103,41 +98,41 @@ export const Canvas = ({
         notebook: "bg-white bg-[linear-gradient(90deg,transparent_79px,#ef4444_2px,transparent_81px),linear-gradient(#cbd5e1_1px,transparent_0)] bg-[size:100%_1.5em]"
     };
 
-
     useDisableScrollBounds();
-
     const history = useHistory();
     const canUndo = useCanUndo();
     const canRedo = useCanRedo();
 
     const insertlayer = useMutation((
         { storage, setMyPresence, self },
-        layerType: LayerType.Ellipse | LayerType.Rectangle | LayerType.Text | LayerType.Note | LayerType.Triangle | LayerType.LatexText,
+        layerType: LayerType,
         position: Point,
+        width: number = 100,
+        height: number = 100,
     ) => {
         const liveLayers = storage.get("layers");
-        if (liveLayers.size >= MAX_LAYERS) {
-            return;
-        }
+        if (liveLayers.size >= MAX_LAYERS) return;
 
         const liveLayerIds = storage.get("layerIds");
         const layerId = nanoid();
-        const layer = new LiveObject({
+
+        const layerData = {
             type: layerType,
             x: position.x,
             y: position.y,
-            height: 100,
-            width: 100,
+            height: height,
+            width: width,
             fill: lastUsedColor,
             authorId: self.id,
-        });
+        } as any;
+
+        const layer = new LiveObject(layerData);
 
         liveLayerIds.push(layerId);
         liveLayers.set(layerId, layer);
 
         setMyPresence({ selection: [layerId] }, { addToHistory: true });
         setCanvasState({ mode: CanvasMode.None });
-
     }, [lastUsedColor]);
 
     const translateSelectedLayers = useMutation((
@@ -155,18 +150,15 @@ export const Canvas = ({
 
         for (const id of self.presence.selection) {
             const layer = liveLayers.get(id);
-
             if (layer) {
                 layer.update({
                     x: layer.get("x") + offset.x,
                     y: layer.get("y") + offset.y,
                 });
             };
-
         }
 
         setCanvasState({ mode: CanvasMode.Translating, current: point });
-
     }, [canvasState]);
 
     const unselectLayers = useMutation((
@@ -194,7 +186,6 @@ export const Canvas = ({
         );
 
         setMyPresence({ selection: ids });
-
     }, [layerIds]);
 
     const startSelectionNet = useCallback((
@@ -212,7 +203,6 @@ export const Canvas = ({
         e: React.PointerEvent,
     ) => {
         const { pencilDraft } = self.presence;
-
         if (e.buttons !== 1 || pencilDraft == null) return;
 
         if (canvasState.mode === CanvasMode.Pencil) {
@@ -315,10 +305,8 @@ export const Canvas = ({
         setCamera((camera) => {
             const zoomFactor = Math.pow(0.999, e.deltaY);
             const newZoom = Math.min(Math.max(camera.zoom * zoomFactor, 0.1), 10);
-
             const mouseX = e.clientX;
             const mouseY = e.clientY;
-
             const dx = (mouseX - camera.x) * (1 - zoomFactor);
             const dy = (mouseY - camera.y) * (1 - zoomFactor);
 
@@ -343,15 +331,30 @@ export const Canvas = ({
             }));
         }
 
-        if (canvasState.mode === CanvasMode.Pressing) {
-            startSelectionNet(current, canvasState.origin);
-        } else if (canvasState.mode === CanvasMode.SelectionNet) {
-            updateSelectionNet(current, canvasState.origin);
-        } else if (canvasState.mode === CanvasMode.Translating) {
+        else if (canvasState.mode === CanvasMode.Resizing) {
+            resizeSelectedLayer(current);
+        }
+
+        else if (canvasState.mode === CanvasMode.Translating) {
             translateSelectedLayers(current);
-        } else if (canvasState.mode === CanvasMode.Resizing) {
-            resizeSelectedLayer(current)
-        } else if (
+        }
+
+        else if (canvasState.mode === CanvasMode.Pressing) {
+            setCanvasState({
+                ...canvasState,
+                current: current,
+            });
+
+            if (!("layerType" in canvasState)) {
+                startSelectionNet(current, canvasState.origin);
+            }
+        }
+
+        else if (canvasState.mode === CanvasMode.SelectionNet) {
+            updateSelectionNet(current, canvasState.origin);
+        }
+
+        else if (
             canvasState.mode === CanvasMode.Pencil ||
             canvasState.mode === CanvasMode.Line
         ) {
@@ -359,17 +362,15 @@ export const Canvas = ({
         }
 
         setMyPresence({ cursor: current });
-    },
-        [
-            camera,
-            canvasState,
-            resizeSelectedLayer,
-            translateSelectedLayers,
-            startSelectionNet,
-            updateSelectionNet,
-            continueDrawing,
-        ]
-    );
+    }, [
+        camera,
+        canvasState,
+        resizeSelectedLayer,
+        translateSelectedLayers,
+        startSelectionNet,
+        updateSelectionNet,
+        continueDrawing,
+    ]);
 
     const onPointerLeave = useMutation(({ setMyPresence }) => {
         setMyPresence({ cursor: null });
@@ -377,17 +378,22 @@ export const Canvas = ({
 
     const onPointerDown = useCallback((e: React.PointerEvent) => {
         const point = pointerEventToCanvasPoint(e, camera);
-
-        if (isViewer && e.button !== 1) {
-            return;
-        }
+        if (isViewer && e.button !== 1) return;
 
         if (e.button === 1) {
             setCanvasState({ mode: CanvasMode.Panning, origin: point });
             return;
         }
 
-        if (canvasState.mode === CanvasMode.Inserting) return;
+        if (canvasState.mode === CanvasMode.Inserting) {
+            setCanvasState({
+                mode: CanvasMode.Pressing,
+                origin: point,
+                current: point,
+                layerType: canvasState.layerType
+            } as any);
+            return;
+        }
 
         if (canvasState.mode === CanvasMode.Pencil || canvasState.mode === CanvasMode.Line) {
             startDrawing(point, e.pressure);
@@ -395,7 +401,7 @@ export const Canvas = ({
         }
 
         setCanvasState({ origin: point, mode: CanvasMode.Pressing });
-    }, [camera, canvasState.mode, isViewer, startDrawing]);
+    }, [camera, canvasState, isViewer, startDrawing, setCanvasState]);
 
     const onPointerUp = useMutation((
         { storage, self, setMyPresence },
@@ -413,16 +419,27 @@ export const Canvas = ({
                 const layer = layers.get(id);
                 return layer?.get("authorId") === selfId;
             });
-
             setMyPresence({ selection: filteredSelection });
         }
 
-        if (
-            canvasState.mode === CanvasMode.None ||
-            canvasState.mode === CanvasMode.Pressing
-        ) {
-            unselectLayers();
-            setCanvasState({ mode: CanvasMode.None });
+        if (canvasState.mode === CanvasMode.Pressing) {
+            if ("layerType" in canvasState) {
+                const { origin, layerType } = canvasState as any;
+
+                const x = Math.min(origin.x, point.x);
+                const y = Math.min(origin.y, point.y);
+                const width = Math.abs(origin.x - point.x);
+                const height = Math.abs(origin.y - point.y);
+
+                if (width < 5 && height < 5) {
+                    insertlayer(layerType, { x: point.x - 50, y: point.y - 50 }, 100, 100);
+                } else {
+                    insertlayer(layerType, { x, y }, width, height);
+                }
+            } else {
+                unselectLayers();
+                setCanvasState({ mode: CanvasMode.None });
+            }
         }
         else if (
             canvasState.mode === CanvasMode.Pencil ||
@@ -431,7 +448,7 @@ export const Canvas = ({
             insertPath();
         }
         else if (canvasState.mode === CanvasMode.Inserting) {
-            insertlayer(canvasState.layerType, point);
+            insertlayer((canvasState as any).layerType, point);
         }
         else {
             setCanvasState({ mode: CanvasMode.None });
@@ -448,7 +465,6 @@ export const Canvas = ({
         setCanvasState,
     ]);
 
-
     const onLayerPointerDown = useMutation((
         { self, setMyPresence, storage },
         e: React.PointerEvent,
@@ -456,19 +472,20 @@ export const Canvas = ({
     ) => {
         if (isViewer) return;
 
+        e.stopPropagation();
+
         const layer = storage.get("layers").get(layerId);
+        if (isEditor && layer?.get("authorId") !== self.id) return;
 
-        if (isEditor && layer?.get("authorId") !== self.id) {
-            return;
-        }
-
-        if (canvasState.mode === CanvasMode.Pencil || canvasState.mode === CanvasMode.Inserting) {
+        if (
+            canvasState.mode === CanvasMode.Pencil ||
+            canvasState.mode === CanvasMode.Inserting ||
+            canvasState.mode === CanvasMode.Line
+        ) {
             return;
         }
 
         history.pause();
-        e.stopPropagation();
-
         const point = pointerEventToCanvasPoint(e, camera);
 
         if (!self.presence.selection.includes(layerId)) {
@@ -482,7 +499,6 @@ export const Canvas = ({
         const liveLayers = storage.get("layers");
         const liveLayerIds = storage.get("layerIds");
         const selection = self.presence.selection;
-
         const newIds: string[] = [];
 
         selection.forEach((id) => {
@@ -490,33 +506,27 @@ export const Canvas = ({
             if (layer) {
                 const newId = nanoid();
                 const layerData = layer.toObject();
-
                 const duplicate = new LiveObject({
                     ...layerData,
                     x: layerData.x + 20,
                     y: layerData.y + 20,
                 });
-
                 liveLayers.set(newId, duplicate);
                 liveLayerIds.push(newId);
                 newIds.push(newId);
             }
         });
-
         setMyPresence({ selection: newIds }, { addToHistory: true });
     }, []);
 
     const layerIdsToColorSelection = useMemo(() => {
         const layerIdsToColorSelection: Record<string, string> = {};
-
         for (const user of selections) {
             const [connectionId, selection] = user;
-
             for (const layerId of selection) {
                 layerIdsToColorSelection[layerId] = connectionIdToColor(connectionId)
             }
         }
-
         return layerIdsToColorSelection;
     }, [selections])
 
@@ -526,13 +536,11 @@ export const Canvas = ({
             case CanvasMode.Translating:
                 return "cursor-grabbing";
             case CanvasMode.Inserting:
+            case CanvasMode.Line:
+            case CanvasMode.Pencil:
                 return "cursor-crosshair";
             case CanvasMode.Resizing:
                 return "cursor-nwse-resize";
-            case CanvasMode.Line:
-                return "cursor-crosshair";
-            case CanvasMode.Pencil:
-                return "cursor-crosshair";
             default:
                 return "cursor-default";
         }
@@ -540,34 +548,22 @@ export const Canvas = ({
 
     useEffect(() => {
         const handleWheel = (e: WheelEvent) => {
-            if (e.ctrlKey || e.metaKey) {
-                e.preventDefault();
-            }
+            if (e.ctrlKey || e.metaKey) e.preventDefault();
         };
-
         window.addEventListener("wheel", handleWheel, { passive: false });
-
-        return () => {
-            window.removeEventListener("wheel", handleWheel);
-        };
+        return () => window.removeEventListener("wheel", handleWheel);
     }, []);
 
     useEffect(() => {
         const preventSafariZoom = (e: any) => e.preventDefault();
-
         window.addEventListener('gesturestart', preventSafariZoom);
-
-        return () => {
-            window.removeEventListener('gesturestart', preventSafariZoom);
-        };
+        return () => window.removeEventListener('gesturestart', preventSafariZoom);
     }, []);
 
     useEffect(() => {
         function onKeyDown(e: KeyboardEvent) {
             if (isViewer) return;
-            const isTyping =
-                (document.activeElement as HTMLElement)?.isContentEditable;
-
+            const isTyping = (document.activeElement as HTMLElement)?.isContentEditable;
             if (isTyping) return;
 
             switch (e.key) {
@@ -576,11 +572,8 @@ export const Canvas = ({
                     break;
                 case "z":
                     if (e.ctrlKey || e.metaKey) {
-                        if (e.shiftKey) {
-                            history.redo();
-                        } else {
-                            history.undo();
-                        }
+                        if (e.shiftKey) history.redo();
+                        else history.undo();
                     }
                     break;
                 case "d":
@@ -591,21 +584,16 @@ export const Canvas = ({
                     break;
             }
         }
-
         window.addEventListener("keydown", onKeyDown);
         return () => window.removeEventListener("keydown", onKeyDown);
-    }, [deleteLayers, history, isViewer]);
+    }, [deleteLayers, history, isViewer, duplicateLayers]);
 
     return (
         <main
             className={`h-full w-full relative touch-none transition-colors duration-500 ${getBgClass()} ${getCursor()}`}
-            style={{
-                touchAction: 'none',
-                overscrollBehavior: 'none'
-            }}
+            style={{ touchAction: 'none', overscrollBehavior: 'none' }}
         >
             <Info boardId={boardId} />
-
             <Participants />
             {!isViewer && (
                 <>
@@ -625,6 +613,7 @@ export const Canvas = ({
                     />
                 </>
             )}
+
             <svg
                 className="h-screen w-screen"
                 onWheel={onWheel}
@@ -635,13 +624,65 @@ export const Canvas = ({
             >
                 <g
                     style={{
-                        transform: `
-                          translate(${camera.x}px, ${camera.y}px) 
-                          scale(${camera.zoom})
-                        `,
+                        transform: `translate(${camera.x}px, ${camera.y}px) scale(${camera.zoom})`,
                         transition: "transform 0.1s ease-out"
                     }}
                 >
+                    {canvasState.mode === CanvasMode.Pressing &&
+                        canvasState.current &&
+                        canvasState.origin &&
+                        "layerType" in canvasState && (
+                            <g className="pointer-events-none opacity-50">
+                                {(() => {
+                                    const x = Math.min(canvasState.origin.x, canvasState.current.x);
+                                    const y = Math.min(canvasState.origin.y, canvasState.current.y);
+                                    const width = Math.abs(canvasState.origin.x - canvasState.current.x);
+                                    const height = Math.abs(canvasState.origin.y - canvasState.current.y);
+                                    const fill = colorToCss(lastUsedColor);
+
+                                    switch (canvasState.layerType) {
+                                        case LayerType.Rectangle:
+                                            return (
+                                                <rect
+                                                    x={x} y={y} width={width} height={height}
+                                                    fill={fill} stroke="#3b82f6" strokeWidth="1"
+                                                />
+                                            );
+                                        case LayerType.Ellipse:
+                                            return (
+                                                <ellipse
+                                                    cx={x + width / 2} cy={y + height / 2}
+                                                    rx={width / 2} ry={height / 2}
+                                                    fill={fill} stroke="#3b82f6" strokeWidth="1"
+                                                />
+                                            );
+                                        case LayerType.Triangle:
+                                            return (
+                                                <polygon
+                                                    points={`${x + width / 2},${y} ${x},${y + height} ${x + width},${y + height}`}
+                                                    fill={fill} stroke="#3b82f6" strokeWidth="1"
+                                                />
+                                            );
+                                        case LayerType.Note:
+                                            return (
+                                                <rect
+                                                    x={x} y={y} width={width} height={height}
+                                                    fill="#fef08a" stroke="#eab308" strokeWidth="1"
+                                                />
+                                            );
+                                        // Add more cases for Diamond, Star, etc. as needed
+                                        default:
+                                            return (
+                                                <rect
+                                                    x={x} y={y} width={width} height={height}
+                                                    fill="transparent" stroke="#3b82f6" strokeDasharray="5,5"
+                                                />
+                                            );
+                                    }
+                                })()}
+                            </g>
+                        )}
+
                     {layerIds?.map((layerId) => (
                         <LayerPreview
                             key={layerId}
@@ -654,9 +695,9 @@ export const Canvas = ({
                             }
                         />
                     ))}
-                    <SelectionBox
-                        onResizeHandlePointerDown={onResizeHandlePointerDown}
-                    />
+
+                    <SelectionBox onResizeHandlePointerDown={onResizeHandlePointerDown} />
+
                     {canvasState.mode === CanvasMode.SelectionNet && canvasState.current != null && (
                         <rect
                             className="fill-blue-500/5 stroke-blue-500 stroke-1"
@@ -666,7 +707,9 @@ export const Canvas = ({
                             height={Math.abs(canvasState.origin.y - canvasState.current.y)}
                         />
                     )}
+
                     <CursorsPresence />
+
                     {pencilDraft != null && pencilDraft.length > 0 && (
                         <Path
                             points={pencilDraft}

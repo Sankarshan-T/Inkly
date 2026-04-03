@@ -16,6 +16,14 @@ import {
     Undo2,
     Settings2,
     Check,
+    Plus,
+    Shapes,
+    LineSquiggle,
+    Diamond,
+    Hexagon,
+    ArrowUpRight,
+    Star,
+    Pentagon,
 } from "lucide-react";
 
 import { ToolButton } from "./tool-button";
@@ -31,6 +39,12 @@ import {
     DialogTrigger,
     DialogHeader
 } from "@/components/ui/dialog";
+import {
+    DropdownMenu,
+    DropdownMenuTrigger,
+    DropdownMenuContent,
+    DropdownMenuItem
+} from "@/components/ui/dropdown-menu";
 
 interface ToolbarProps {
     canvasState: CanvasState;
@@ -114,56 +128,124 @@ export const Toolbar = ({
                         canvasState.mode === CanvasMode.Resizing
                     }
                 />
-                <ToolButton
-                    label="Text"
-                    icon={Type}
-                    onClick={() => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.Text })}
-                    isActive={canvasState.mode === CanvasMode.Inserting && canvasState.layerType === LayerType.Text}
-                />
-                <ToolButton
-                    label="Math"
-                    icon={Pi}
-                    onClick={() => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.LatexText })}
-                    isActive={canvasState.mode === CanvasMode.Inserting && canvasState.layerType === LayerType.LatexText}
-                />
-                <ToolButton
-                    label="Sticky Note"
-                    icon={StickyNote}
-                    onClick={() => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.Note })}
-                    isActive={canvasState.mode === CanvasMode.Inserting && canvasState.layerType === LayerType.Note}
-                />
-                <ToolButton
-                    label="Rectangle"
-                    icon={Square}
-                    onClick={() => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.Rectangle })}
-                    isActive={canvasState.mode === CanvasMode.Inserting && canvasState.layerType === LayerType.Rectangle}
-                />
-                <ToolButton
-                    label="Ellipse"
-                    icon={Circle}
-                    onClick={() => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.Ellipse })}
-                    isActive={canvasState.mode === CanvasMode.Inserting && canvasState.layerType === LayerType.Ellipse}
-                />
-                <ToolButton
-                    label="Triangle"
-                    icon={Triangle}
-                    onClick={() => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.Triangle })}
-                    isActive={canvasState.mode === CanvasMode.Inserting && canvasState.layerType === LayerType.Triangle}
-                />
-                <ToolButton
-                    label="Pen"
-                    icon={Pencil}
-                    onClick={() => setCanvasState({ mode: CanvasMode.Pencil })}
-                    isActive={canvasState.mode === CanvasMode.Pencil}
-                />
-                <ToolButton
-                    label="Line"
-                    icon={Slash}
-                    onClick={() => setCanvasState({ mode: CanvasMode.Line })}
-                    isActive={canvasState.mode === CanvasMode.Line}
-                />
 
-                <div className="h-px w-[80%] bg-indigo-50 my-1" />
+                <div className="h-px w-8 bg-indigo-700 my-1 " />
+
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <div className="relative">
+                            <ToolButton
+                                label="Insert"
+                                icon={Plus}
+                                onClick={() => { }}
+                                isActive={canvasState.mode === CanvasMode.Inserting && [LayerType.Text, LayerType.LatexText, LayerType.Note].includes(canvasState.layerType!)}
+                            />
+                        </div>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent side="right" align="start" className="ml-2 p-2 gap-y-1 flex flex-col">
+                        <DropdownMenuItem
+                            onClick={() => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.Text })}
+                        >
+                            <Type className="h-4 w-4 mr-2" /> Text
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem
+                            onClick={() => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.LatexText })}
+                        >
+                            <Pi className="h-4 w-4 mr-2" /> Math Formula
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem
+                            onClick={() => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.Note })}
+                        >
+                            <StickyNote className="h-4 w-4 mr-2" /> Sticky Note
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <div className="relative">
+                            <ToolButton
+                                label="Shapes"
+                                icon={Shapes}
+                                onClick={() => { }}
+                                isActive={
+                                    canvasState.mode === CanvasMode.Inserting &&
+                                    [
+                                        LayerType.Rectangle,
+                                        LayerType.Ellipse,
+                                        LayerType.Triangle,
+                                        LayerType.Diamond,
+                                        LayerType.Hexagon,
+                                        LayerType.Pentagon,
+                                        LayerType.Star,
+                                        LayerType.Arrow
+                                    ].includes(canvasState.layerType!)
+                                }
+                            />
+                        </div>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent side="right" align="start" className="ml-2 p-2 gap-y-1 flex flex-col">
+                        <DropdownMenuItem onClick={() => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.Rectangle })}>
+                            <Square className="h-4 w-4 mr-2" /> Rectangle
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem onClick={() => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.Ellipse })}>
+                            <Circle className="h-4 w-4 mr-2" /> Ellipse
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem onClick={() => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.Triangle })}>
+                            <Triangle className="h-4 w-4 mr-2" /> Triangle
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem onClick={() => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.Diamond })}>
+                            <Diamond className="h-4 w-4 mr-2" /> Diamond
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem onClick={() => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.Pentagon })}>
+                            <Pentagon className="h-4 w-4 mr-2" /> Pentagon
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem onClick={() => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.Hexagon })}>
+                            <Hexagon className="h-4 w-4 mr-2" /> Hexagon
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem onClick={() => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.Star })}>
+                            <Star className="h-4 w-4 mr-2" /> Star
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem onClick={() => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.Arrow })}>
+                            <ArrowUpRight className="h-4 w-4 mr-2" /> Arrow
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <div className="relative">
+                            <ToolButton
+                                label="Drawing"
+                                icon={LineSquiggle}
+                                onClick={() => { }}
+                                isActive={canvasState.mode === CanvasMode.Pencil || canvasState.mode === CanvasMode.Line}
+                            />
+                        </div>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent side="right" align="start" className="ml-2 p-2 gap-y-1 flex flex-col">
+                        <DropdownMenuItem
+                            onClick={() => setCanvasState({ mode: CanvasMode.Pencil })}
+                        >
+                            <Pencil className="h-4 w-4 mr-2" /> Pencil
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={() => setCanvasState({ mode: CanvasMode.Line })}
+                        >
+                            <Slash className="h-4 w-4 mr-2" /> Line
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+
+                <div className="h-px w-[80%] bg-indigo-700 my-1" />
 
                 <Dialog>
                     <DialogTrigger asChild>
@@ -199,7 +281,7 @@ export const Toolbar = ({
                                                 <Check className="h-8 w-8 text-indigo-600 drop-shadow-sm" />
                                             </div>
                                         )}
-                                    </div>www
+                                    </div>
                                     <span className={`text-[10px] font-bold uppercase tracking-wider ${bgMode === mode ? "text-indigo-600" : "text-neutral-500"
                                         }`}>
                                         {BG_CONFIG[mode].name}

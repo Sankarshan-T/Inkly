@@ -2,7 +2,7 @@ export type Color = {
     r: number;
     g: number;
     b: number;
-}
+};
 
 export type Camera = {
     x: number;
@@ -17,26 +17,18 @@ export type BackgroundMode =
 export enum LayerType {
     Rectangle,
     Ellipse,
-    Path,
+    Triangle,
+    Diamond,
+    Pentagon,
+    Hexagon,
+    Star,
+    Arrow,
+    Line,
     Text,
     Note,
-    Triangle,
-    Line,
     LatexText,
+    Path,
 };
-
-export type TriangleLayer = {
-    type: LayerType.Triangle;
-    x: number;
-    y: number;
-    height: number;
-    width: number;
-    fill: Color;
-    value?: string;
-    outlineOnly?: boolean;
-    strokeWidth?: number;
-    authorId?: string;
-}
 
 export type RectangleLayer = {
     type: LayerType.Rectangle;
@@ -61,6 +53,69 @@ export type EllipseLayer = {
     value?: string;
     outlineOnly?: boolean;
     strokeWidth?: number;
+    authorId?: string;
+};
+
+export type TriangleLayer = {
+    type: LayerType.Triangle;
+    x: number;
+    y: number;
+    height: number;
+    width: number;
+    fill: Color;
+    value?: string;
+    outlineOnly?: boolean;
+    strokeWidth?: number;
+    authorId?: string;
+};
+
+export type DiamondLayer = {
+    type: LayerType.Diamond;
+    x: number;
+    y: number;
+    height: number;
+    width: number;
+    fill: Color;
+    authorId?: string;
+};
+
+export type HexagonLayer = {
+    type: LayerType.Hexagon;
+    x: number;
+    y: number;
+    height: number;
+    width: number;
+    fill: Color;
+    authorId?: string;
+};
+
+export type StarLayer = {
+    type: LayerType.Star;
+    x: number;
+    y: number;
+    height: number;
+    width: number;
+    fill: Color;
+    authorId?: string;
+};
+
+export type PentagonLayer = {
+    type: LayerType.Pentagon;
+    x: number;
+    y: number;
+    height: number;
+    width: number;
+    fill: Color;
+    authorId?: string;
+};
+
+export type ArrowLayer = {
+    type: LayerType.Arrow;
+    x: number;
+    y: number;
+    height: number;
+    width: number;
+    fill: Color;
     authorId?: string;
 };
 
@@ -128,44 +183,6 @@ export enum Side {
     Right = 8,
 };
 
-export type CanvasState =
-    | {
-        mode: CanvasMode.None;
-    }
-    | {
-        mode: CanvasMode.Panning,
-        origin: Point;
-    }
-    | {
-        mode: CanvasMode.SelectionNet,
-        origin: Point;
-        current?: Point;
-    }
-    | {
-        mode: CanvasMode.Translating,
-        current: Point;
-    }
-    | {
-        mode: CanvasMode.Inserting,
-        layerType: LayerType.Ellipse | LayerType.Rectangle | LayerType.Text | LayerType.Note | LayerType.LatexText | LayerType.Triangle;
-    }
-    | {
-        mode: CanvasMode.Pencil,
-    }
-    | {
-        mode: CanvasMode.Line,
-    }
-    | {
-        mode: CanvasMode.Pressing,
-        origin: Point;
-    }
-    | {
-        mode: CanvasMode.Resizing,
-        initialBounds: XYWH;
-        corner: Side;
-    }
-
-
 export enum CanvasMode {
     None,
     Pressing,
@@ -178,4 +195,36 @@ export enum CanvasMode {
     Panning,
 };
 
-export type Layer = RectangleLayer | EllipseLayer | PathLayer | TextLayer | NoteLayer | LatexTextLayer | TriangleLayer
+export type CanvasState =
+    | { mode: CanvasMode.None }
+    | { mode: CanvasMode.Panning, origin: Point }
+    | { mode: CanvasMode.SelectionNet, origin: Point, current?: Point }
+    | { mode: CanvasMode.Translating, current: Point }
+    | { mode: CanvasMode.Inserting, layerType: LayerType }
+    | { mode: CanvasMode.Pencil }
+    | { mode: CanvasMode.Line }
+    | {
+        mode: CanvasMode.Pressing,
+        origin: Point,
+        current?: Point,
+        layerType?: LayerType // This is the key for click-and-drag
+    }
+    | {
+        mode: CanvasMode.Resizing,
+        initialBounds: XYWH,
+        corner: Side
+    };
+
+export type Layer =
+    | RectangleLayer
+    | EllipseLayer
+    | PathLayer
+    | TextLayer
+    | NoteLayer
+    | LatexTextLayer
+    | TriangleLayer
+    | DiamondLayer
+    | HexagonLayer
+    | StarLayer
+    | PentagonLayer
+    | ArrowLayer;

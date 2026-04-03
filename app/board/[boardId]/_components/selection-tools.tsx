@@ -58,7 +58,11 @@ export const SelectionTools = memo(({
             return (
                 layer?.type === LayerType.Rectangle ||
                 layer?.type === LayerType.Ellipse ||
-                layer?.type === LayerType.Triangle
+                layer?.type === LayerType.Triangle ||
+                layer?.type === LayerType.Arrow ||
+                layer?.type === LayerType.Star ||
+                layer?.type === LayerType.Hexagon ||
+                layer?.type === LayerType.Pentagon
             );
         });
     }, [selection, liveLayers]);

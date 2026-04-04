@@ -101,7 +101,7 @@ export const Info = ({
                     </div>
                 </Actions>
             </div>
-            <RoleDisplay role={userRole || "viewer"} />
+            <RoleDisplay role={userRole || ""} />
         </div>
     );
 };

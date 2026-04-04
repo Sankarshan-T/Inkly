@@ -49,7 +49,10 @@ export const Actions = ({
 
     const remove = () => {
         mutate({ id })
-            .then(() => toast.success("Board deleted"))
+            .then(() => {
+                toast.success("Board deleted");
+                window.location.href = "/";
+            })
             .catch(() => toast.error("Failed to delete board"))
     }
 

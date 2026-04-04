@@ -28,6 +28,9 @@ export const SelectionTools = memo(({
     const self = useSelf();
     const info = self?.info;
     const selfId = self?.id;
+    const lastUsedColor = useSelf((me) => me.presence.penColor) || { r: 255, g: 255, b: 255 };
+
+    const currentHex = `#${((1 << 24) + (lastUsedColor.r << 16) + (lastUsedColor.g << 8) + lastUsedColor.b).toString(16).slice(1)}`;
 
     const isAdmin = info?.role === "admin";
 
@@ -177,6 +180,7 @@ export const SelectionTools = memo(({
                 <>
                     <ColorPicker
                         onChange={setFill}
+                        currentHex={currentHex}
                     />
 
                     <div className="flex flex-col gap-y-0.5">

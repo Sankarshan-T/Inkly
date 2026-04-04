@@ -10,6 +10,7 @@ interface ToolButtonProps {
     onClick: () => void;
     isActive?: boolean;
     isDisabled?: boolean;
+    side?: "bottom" | "right"
 }
 
 export const ToolButton = ({
@@ -18,9 +19,10 @@ export const ToolButton = ({
     onClick,
     isActive,
     isDisabled,
+    side
 }: ToolButtonProps) => {
     return (
-        <Hint label={label} side="right" sideOffset={10}>
+        <Hint label={label} side={side ? side : "right"} sideOffset={10}>
             <Button
                 disabled={isDisabled}
                 onClick={onClick}

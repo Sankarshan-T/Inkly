@@ -29,8 +29,8 @@ export function pointerEventToCanvasPoint(
   camera: Camera,
 ) {
   return {
-    x: (Math.round(e.clientX) - camera.x) / camera.zoom,
-    y: (Math.round(e.clientY) - camera.y) / camera.zoom,
+    x: Math.round((e.clientX - camera.x) / camera.zoom),
+    y: Math.round((e.clientY - camera.y) / camera.zoom),
   };
 };
 
@@ -117,7 +117,7 @@ export function getContrastTextColors(color: Color) {
 export function penPointsToPath(
   points: number[][],
   color: Color,
-  authorId? : string
+  authorId?: string
 ): PathLayer {
   if (points.length < 2) {
     throw new Error("Cannot transform points with less than 2 points");

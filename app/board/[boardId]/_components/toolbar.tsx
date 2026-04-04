@@ -23,6 +23,7 @@ import {
     Hexagon,
     Star,
     Pentagon,
+    Camera,
 } from "lucide-react";
 
 import { ToolButton } from "./tool-button";

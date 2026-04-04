@@ -50,6 +50,7 @@ import {
     XYWH,
     BackgroundMode
 } from "@/types/canvas";
+import { Topbar } from "./topbar";
 
 const MAX_LAYERS = 1000;
 
@@ -103,6 +104,24 @@ export const Canvas = ({
     const history = useHistory();
     const canUndo = useCanUndo();
     const canRedo = useCanRedo();
+
+    const onResetCamera = useCallback(() => {
+        setCamera({ x: 0, y: 0, zoom: 1 });
+    }, []);
+
+    const onIncreaseZoom = useCallback(() => {
+        setCamera((prev) => ({
+            ...prev,
+            zoom: Math.min(prev.zoom * 1.2, 10)
+        }));
+    }, []);
+
+    const onDecreaseZoom = useCallback(() => {
+        setCamera((prev) => ({
+            ...prev,
+            zoom: Math.max(prev.zoom / 1.2, 0.1)
+        }));
+    }, []);
 
     const insertlayer = useMutation((
         { storage, setMyPresence, self },
@@ -204,6 +223,7 @@ export const Canvas = ({
         e: React.PointerEvent,
     ) => {
         const { pencilDraft } = self.presence;
+
         if (e.buttons !== 1 || pencilDraft == null) return;
 
         if (canvasState.mode === CanvasMode.Pencil) {
@@ -601,6 +621,12 @@ export const Canvas = ({
             style={{ touchAction: 'none', overscrollBehavior: 'none' }}
         >
             <Info boardId={boardId} />
+            <Topbar
+                resetCamera={onResetCamera}
+                zoom={camera.zoom}
+                zoomIn={onIncreaseZoom}
+                zoomOut={onDecreaseZoom}
+            />
             <Participants />
             {!isViewer && (
                 <>

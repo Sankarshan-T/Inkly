@@ -24,8 +24,8 @@ export const Path = ({
         getStroke(points, {
             size: 10,
             thinning: 0.5,
-            smoothing: 0.5,
-            streamline: 0.5,
+            smoothing: 0.1,
+            streamline: 0,
             simulatePressure: points.length !== 2,
         })
     );

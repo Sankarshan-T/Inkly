@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { HexColorPicker } from "react-colorful";
 import { Plus } from "lucide-react";
 import { colorToCss } from "@/lib/utils";
@@ -13,12 +13,10 @@ import {
 
 interface ColorPickerProps {
     onChange: (color: Color) => void;
-    currentHex: string;
 }
 
 export const ColorPicker = ({
     onChange,
-    currentHex
 }: ColorPickerProps) => {
     return (
         <div className="flex flex-wrap gap-2 items-center max-w-41 pr-2 mr-3 border-r border-neutral-200">
@@ -33,19 +31,17 @@ export const ColorPicker = ({
             <ColorButton color={{ r: 67, g: 123, b: 120 }} onClick={onChange} />
             <ColorButton color={{ r: 190, g: 100, b: 10 }} onClick={onChange} />
             <ColorButton color={{ r: 100, g: 0, b: 0 }} onClick={onChange} />
-            <CustomColorButton onChange={onChange} defaultValue={currentHex} />
+            <CustomColorButton onChange={onChange} />
         </div>
     );
 };
 
 const CustomColorButton = ({
-    onChange,
-    defaultValue,
+    onChange
 }: {
-    onChange: (color: Color) => void;
-    defaultValue: string;
+    onChange: (color: Color) => void
 }) => {
-    const [hex, setHex] = useState(defaultValue);
+    const [hex, setHex] = useState("#ffffff");
 
     const handleHexChange = (newHex: string) => {
         setHex(newHex);
@@ -54,10 +50,6 @@ const CustomColorButton = ({
         const b = parseInt(newHex.slice(5, 7), 16);
         onChange({ r, g, b });
     };
-
-    useEffect(() => {
-        setHex(defaultValue);
-    }, [defaultValue]);
 
     return (
         <Popover>

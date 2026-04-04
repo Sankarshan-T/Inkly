@@ -1,7 +1,8 @@
 import { Camera, Color, Layer, LayerType, PathLayer, Point, Side, XYWH } from "@/types/canvas";
 import { clsx, type ClassValue } from "clsx"
 import React from "react";
-import { twMerge } from "tailwind-merge"
+import { twMerge } from "tailwind-merge";
+import { RGBColor } from "react-color";
 
 const COLORS = [
   "#141347",
@@ -176,3 +177,10 @@ export function getSvgPathFromStroke(stroke: number[][]) {
   return d.join(" ");
 };
 
+export function rgbToColor(rgb: RGBColor): Color {
+  return {
+    r: rgb.r,
+    g: rgb.g,
+    b: rgb.b,
+  };
+}

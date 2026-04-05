@@ -23,7 +23,7 @@ export const Path = ({
     const pathData = getSvgPathFromStroke(
         getStroke(points, {
             size: 10,
-            thinning: 0.5,
+            thinning: 0.1,
             smoothing: 0.1,
             streamline: 0,
             simulatePressure: points.length !== 2,
@@ -39,7 +39,7 @@ export const Path = ({
                 d={pathData}
                 fill="currentColor"
                 stroke={stroke}
-                strokeWidth={0.5}
+                strokeWidth={1}
             />
         </g>
     );

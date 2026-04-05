@@ -3,6 +3,7 @@
 import { Path } from "./path";
 import { Info } from "./info";
 import { nanoid } from "nanoid";
+import { Topbar } from "./topbar";
 import { Toolbar } from "./toolbar";
 import { Participants } from "./participants";
 import { SelectionBox } from "./selection-box";
@@ -17,6 +18,7 @@ import React, {
     useCallback,
     useEffect,
     useMemo,
+    useRef,
     useState
 } from "react";
 
@@ -50,7 +52,7 @@ import {
     XYWH,
     BackgroundMode
 } from "@/types/canvas";
-import { Topbar } from "./topbar";
+import { toPng } from 'html-to-image';
 
 const MAX_LAYERS = 1000;
 
@@ -62,6 +64,9 @@ export const Canvas = ({
     boardId,
 }: CanvasProps) => {
     const info = useSelf((me) => me.info);
+
+    const svgRef = useRef<SVGSVGElement>(null);
+
     const userRole = info?.role;
     const isEditor = userRole === "editor";
     const isViewer = userRole === "viewer";
@@ -652,6 +657,28 @@ export const Canvas = ({
         return () => window.removeEventListener("keydown", onKeyDown);
     }, [deleteLayers, history, isViewer, duplicateLayers]);
 
+    const exportToPng = async () => {
+        if (!svgRef.current) return;
+
+        try {
+            const dataUrl = await toPng(svgRef.current as unknown as HTMLElement, {
+                backgroundColor: "#ffffff",
+                width: svgRef.current.clientWidth,
+                height: svgRef.current.clientHeight,
+                style: {
+                    visibility: 'visible',
+                }
+            });
+
+            const link = document.createElement('a');
+            link.download = `inkly-board-${Date.now()}.png`;
+            link.href = dataUrl;
+            link.click();
+        } catch (err) {
+            console.error("Export failed", err);
+        }
+    };
+
     return (
         <main
             className={`h-full w-full relative touch-none transition-colors duration-500 ${getBgClass()} ${getCursor()}`}
@@ -663,6 +690,7 @@ export const Canvas = ({
                 zoom={camera.zoom}
                 zoomIn={onIncreaseZoom}
                 zoomOut={onDecreaseZoom}
+                onExport={exportToPng}
             />
             <Participants />
             {!isViewer && (
@@ -685,6 +713,7 @@ export const Canvas = ({
             )}
 
             <svg
+                ref={svgRef}
                 className="h-screen w-screen"
                 onWheel={onWheel}
                 onPointerMove={onPointerMove}

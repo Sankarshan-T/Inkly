@@ -36,22 +36,22 @@ export const PreviewCanvas = () => {
 
     return (
         <div className="relative w-[90%] h-135 bg-white rounded-3xl shadow-2xl border-8 border-indigo-900/10 overflow-hidden group">
-            
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 flex gap-2 bg-white/80 backdrop-blur-md p-2 rounded-2xl border border-indigo-100 shadow-xl">
-                <button 
+
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 flex gap-2 bg-white/80 backdrop-blur-xs p-2 rounded-3xl border border-indigo-100 shadow-xl">
+                <button
                     onClick={() => setMode("pencil")}
                     className={`p-3 rounded-xl transition-all ${mode === "pencil" ? "bg-indigo-600 text-white" : "hover:bg-indigo-50 text-indigo-600"}`}
                 >
                     <Pencil size={20} />
                 </button>
-                <button 
+                <button
                     onClick={() => setMode("line")}
                     className={`p-3 rounded-xl transition-all ${mode === "line" ? "bg-indigo-600 text-white" : "hover:bg-indigo-50 text-indigo-600"}`}
                 >
                     <Slash size={20} />
                 </button>
                 <div className="w-px bg-indigo-100 mx-1" />
-                <button 
+                <button
                     onClick={() => setPaths([])}
                     className="p-3 rounded-xl hover:bg-red-50 text-red-500 transition-all"
                 >
@@ -59,7 +59,7 @@ export const PreviewCanvas = () => {
                 </button>
             </div>
 
-            <svg 
+            <svg
                 className="h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] bg-size-[30px_30px] touch-none cursor-crosshair"
                 onPointerDown={onPointerDown}
                 onPointerMove={onPointerMove}
@@ -75,7 +75,7 @@ export const PreviewCanvas = () => {
 
             <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-indigo-900/40 font-medium pointer-events-none text-center">
                 {mode === "pencil" ? "Freehand Mode " : "Straight Line Mode "}
-                <br/>
+                <br />
                 This is just a preview. More features can be unlocked after signing up
             </div>
         </div>

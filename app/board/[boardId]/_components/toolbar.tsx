@@ -115,8 +115,8 @@ export const Toolbar = ({
     const isEmpty = useStorage((root) => root.layerIds.length === 0);
 
     return (
-        <div className="absolute top-[50%] -translate-y-[50%] left-2 flex flex-col rounded-2xl gap-y-4">
-            <div className="p-1.5 flex gap-y-1 flex-col items-center bg-white/80 backdrop-blur-md rounded-2xl border border-indigo-100 shadow-xl">
+        <div className="absolute top-[50%] -translate-y-[50%] left-2 flex flex-col rounded-3xl gap-y-4">
+            <div className="p-1.5 flex gap-y-1 flex-col items-center bg-white/80 backdrop-blur-xs rounded-3xl border border-indigo-100 shadow-xl">
                 <ToolButton
                     label="Select"
                     icon={MousePointer2}
@@ -259,7 +259,7 @@ export const Toolbar = ({
                             onClick={() => { }}
                         />
                     </DialogTrigger>
-                    <DialogContent className="max-w-2xl bg-white/95 backdrop-blur-md border-indigo-100 shadow-2xl rounded-3xl">
+                    <DialogContent className="max-w-2xl bg-white/95 backdrop-blur-xs border-indigo-100 shadow-2xl rounded-3xl">
                         <DialogHeader>
                             <DialogTitle className="text-2xl font-bold text-indigo-950">Canvas Background</DialogTitle>
                             <DialogDescription className="text-indigo-600/70">
@@ -297,7 +297,7 @@ export const Toolbar = ({
                 </Dialog>
             </div>
 
-            <div className="p-1.5 flex gap-y-1 flex-col items-center bg-white/80 backdrop-blur-xl rounded-2xl border border-indigo-100 shadow-xl">
+            <div className="p-1.5 flex gap-y-1 flex-col items-center bg-white/80 backdrop-blur-xs rounded-3xl border border-indigo-100 shadow-xl">
                 <ToolButton
                     label="Undo"
                     icon={Undo2}
@@ -328,6 +328,6 @@ export const Toolbar = ({
 
 export const ToolbarSkeleton = () => {
     return (
-        <div className="absolute top-[50%] -translate-y-[50%] left-2 flex flex-col gap-y-4 bg-white h-112.5 w-14 shadow-xl rounded-2xl border border-neutral-200 animate-pulse" />
+        <div className="absolute top-[50%] -translate-y-[50%] left-2 flex flex-col gap-y-4 bg-white h-112.5 w-14 shadow-xl rounded-3xl border border-neutral-200 animate-pulse" />
     );
 };

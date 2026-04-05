@@ -39,7 +39,6 @@ export const Info = ({
 
     const userRole = info?.role;
 
-    const isAdmin = userRole === "admin";
     const isEditor = userRole === "editor";
     const isViewer = userRole === "viewer";
 
@@ -53,18 +52,18 @@ export const Info = ({
 
     return (
         <div className="flex absolute top-2 left-2 justify-center items-center gap-x-2 ">
-            <div className="relative  px-1.5 h-12 flex items-center justify-between  bg-white/80 backdrop-blur-md rounded-2xl border border-indigo-100 shadow-xl">
+            <div className="relative  px-1.5 h-12 flex items-center justify-between  bg-white/80 backdrop-blur-xs rounded-3xl border border-indigo-100 shadow-xl">
                 <Hint label="All Boards" side="bottom" sideOffset={10}>
-                    <Button asChild className="px-2" variant={"board"}>
+                    <Button asChild className="p-2 rounded-3xl" variant={"board"}>
                         <Link href={"/"}>
                             <Image
                                 src={"/logo.svg"}
                                 alt="Board Logo"
-                                height={30}
-                                width={30}
+                                height={25}
+                                width={25}
                             />
                             <span className={cn(
-                                "font-semibold text-2xl ml-2 text-black",
+                                "font-semibold text-2xl text-black",
                                 font.className,
                             )}>
                                 Inkly
@@ -76,7 +75,7 @@ export const Info = ({
                 <Hint label="Edit board title" side="bottom" sideOffset={10}>
                     <Button
                         variant={"board"}
-                        className="text-base font-normal px-2 select-none"
+                        className="text-base font-medium px-2 rounded-xl select-none"
                         onClick={() => onOpen(data._id, data.title)}
                         disabled={isViewer || isEditor}
                     >
@@ -94,7 +93,7 @@ export const Info = ({
                 >
                     <div>
                         <Hint label="Main menu" side="bottom" sideOffset={10}>
-                            <Button size={"icon"} variant={"board"}>
+                            <Button size={"icon"} variant={"board"} className="rounded-3xl">
                                 <Menu />
                             </Button>
                         </Hint>

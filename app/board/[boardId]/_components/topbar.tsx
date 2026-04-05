@@ -5,6 +5,8 @@ import { UserAvatar } from "./user-avatar";
 import { connectionIdToColor } from "@/lib/utils";
 import { ToolButton } from "./tool-button";
 import { Camera, Image, Minus, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Hint } from "@/components/hint";
 
 interface TopbarProps {
     resetCamera: () => void;
@@ -22,38 +24,33 @@ export const Topbar = ({
     onExport,
 }: TopbarProps) => {
     return (
-        <div className="absolute left-[50%] -translate-x-[50%] top-2 flex rounded-2xl gap-x-4">
-            <div className="p-1.5 flex gap-x-1 items-center bg-white/80 backdrop-blur-md rounded-2xl border border-indigo-100 shadow-xl">
+        <div className="absolute left-[50%] -translate-x-[50%] top-2 flex rounded-3xl gap-x-4">
+            <div className="p-1.5 flex gap-x-1 items-center bg-white/80 backdrop-blur-xs rounded-3xl border border-indigo-100 shadow-xl">
                 <ToolButton
                     side="bottom"
                     icon={Minus}
                     onClick={zoomOut}
                     label="Zoom out"
                 />
-                <ToolButton
-                    side="bottom"
-                    icon={Camera}
-                    onClick={resetCamera}
-                    label="Reset Camera"
-                />
+                <Hint label={"Reset Camera"} side="bottom">
+                    <Button onClick={resetCamera} variant={"ghost"} className="p-1">
+                        {Math.round(zoom * 100)}%
+                    </Button>
+                </Hint>
                 <ToolButton
                     side="bottom"
                     icon={Plus}
                     onClick={zoomIn}
                     label="Zoom in"
                 />
-                <div className="font-medium text-xs">
-                    {Math.round(zoom * 100)}%
-                </div>
             </div>
-            <div className="p-1.5 flex gap-x-1 items-center bg-white/80 backdrop-blur-md rounded-2xl border border-indigo-100 shadow-xl">
+            <div className="p-1.5 flex gap-x-1 items-center bg-white/80 backdrop-blur-xs rounded-3xl border border-indigo-100 shadow-xl">
                 <ToolButton
                     side="bottom"
                     icon={Image}
                     onClick={onExport}
                     label="Download as PNG"
                 />
-
             </div>
         </div>
     );

@@ -28,6 +28,7 @@ export const ToolButton = ({
                 onClick={onClick}
                 size={"icon"}
                 variant={isActive ? "boardActive" : "board"}
+                className="rounded-3xl"
             >
                 <Icon />
             </Button>

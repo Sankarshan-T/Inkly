@@ -24,6 +24,7 @@ import {
     Star,
     Pentagon,
     Camera,
+    EraserIcon,
 } from "lucide-react";
 
 import { ToolButton } from "./tool-button";
@@ -241,6 +242,13 @@ export const Toolbar = ({
                     </DropdownMenuContent>
                 </DropdownMenu>
 
+                <div className="h-px w-[80%] bg-neutral-900 my-1" />
+                <ToolButton
+                    label="Eraser"
+                    icon={EraserIcon}
+                    onClick={() => setCanvasState({ mode: CanvasMode.Erasing })}
+                    isActive={canvasState.mode === CanvasMode.Erasing}
+                />
                 <div className="h-px w-[80%] bg-neutral-900 my-1" />
 
                 <Dialog>

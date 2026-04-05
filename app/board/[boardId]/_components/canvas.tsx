@@ -314,6 +314,33 @@ export const Canvas = ({
         };
     }, [canvasState]);
 
+    const onEraserPointerMove = useMutation(({ storage }, point: Point) => {
+        const liveLayers = storage.get("layers");
+        const liveLayerIds = storage.get("layerIds");
+
+        const layerIds = liveLayerIds.toImmutable();
+
+        for (let i = layerIds.length - 1; i >= 0; i--) {
+            const id = layerIds[i];
+            const layer = liveLayers.get(id);
+
+            if (layer) {
+                const { x, y, width, height } = layer.toObject();
+                if (
+                    point.x >= x &&
+                    point.x <= x + width &&
+                    point.y >= y &&
+                    point.y <= y + height
+                ) {
+                    liveLayerIds.set(i, "");
+                    liveLayerIds.delete(i);
+                    liveLayers.delete(id);
+                    break;
+                }
+            }
+        }
+    }, []);
+
     const onResizeHandlePointerDown = useCallback((
         corner: Side,
         initialBounds: XYWH,
@@ -354,6 +381,9 @@ export const Canvas = ({
                 y: camera.y + e.movementY,
                 zoom: camera.zoom,
             }));
+        }
+        else if (canvasState.mode === CanvasMode.Erasing && e.buttons === 1) {
+            onEraserPointerMove(current);
         }
 
         else if (canvasState.mode === CanvasMode.Resizing) {
@@ -407,6 +437,11 @@ export const Canvas = ({
 
         if (e.button === 1) {
             setCanvasState({ mode: CanvasMode.Panning, origin: point });
+            return;
+        }
+
+        if (canvasState.mode === CanvasMode.Erasing) {
+            onEraserPointerMove(point);
             return;
         }
 
@@ -568,6 +603,8 @@ export const Canvas = ({
                 return "cursor-crosshair";
             case CanvasMode.Resizing:
                 return "cursor-nwse-resize";
+            case CanvasMode.Erasing:
+                return "cursor-cell";
             default:
                 return "cursor-default";
         }

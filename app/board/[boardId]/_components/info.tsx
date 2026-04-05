@@ -26,7 +26,7 @@ const font = Poppins({
 
 const Separator = () => {
     return (
-        <div className="text-neutral-300 text-2xl px-1.5 py-0 leading-0 select-none">
+        <div className="text-muted-foreground text-2xl px-1.5 py-0 leading-0 select-none">
             |
         </div>
     )
@@ -52,7 +52,7 @@ export const Info = ({
 
     return (
         <div className="flex absolute top-2 left-2 justify-center items-center gap-x-2 ">
-            <div className="relative  px-1.5 h-12 flex items-center justify-between  bg-white/80 backdrop-blur-xs rounded-3xl border border-indigo-100 shadow-xl">
+            <div className="relative  px-1.5 h-12 flex items-center justify-between  bg-card/80 backdrop-blur-xs rounded-3xl border border-border shadow-xl">
                 <Hint label="All Boards" side="bottom" sideOffset={10}>
                     <Button asChild className="p-2 rounded-3xl" variant={"board"}>
                         <Link href={"/"}>
@@ -63,7 +63,7 @@ export const Info = ({
                                 width={25}
                             />
                             <span className={cn(
-                                "font-semibold text-2xl text-black",
+                                "font-semibold text-2xl text-primary",
                                 font.className,
                             )}>
                                 Inkly
@@ -108,7 +108,7 @@ export const Info = ({
 export const InfoSkeleton = () => {
     return (
         <div
-            className="absolute top-2 left-2 bg-white rounded-md px-1.5 h-12 flex items-center shadow-md w-75"
+            className="absolute top-2 left-2 bg-card rounded-md px-1.5 h-12 flex items-center shadow-md w-75"
         />
     );
 };

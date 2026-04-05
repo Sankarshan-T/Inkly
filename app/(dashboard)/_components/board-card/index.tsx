@@ -58,7 +58,7 @@ export const BoardCard = ({
     return(
         <Link href={`/board/${id}`} className="group">
             <div className="group aspect-100/127 border rounded-lg overflow-hidden flex flex-col justify-between">
-                <div className="h-full w-full relative flex-1 bg-blue-300">
+                <div className="h-full w-full relative flex-1 bg-primary/20">
                     <Image
                         src={imageUrl}
                         alt="board"
@@ -73,7 +73,7 @@ export const BoardCard = ({
                         side={"right"}
                     >
                         <button className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity px-3 py-2 outline-none">
-                            <MoreHorizontal className="text-white opacity-75 hover:opacity-100 transition-opacity"/>
+                            <MoreHorizontal className="text-primary-foreground opacity-75 hover:opacity-100 transition-opacity"/>
                         </button>
                     </Actions>   
                 </div> 

@@ -161,7 +161,7 @@ export const SelectionTools = memo(({
 
     return (
         <div
-            className="absolute p-3 rounded-xl bg-white shadow-sm border flex select-none"
+            className="absolute p-3 rounded-xl bg-card shadow-sm border flex select-none"
             style={{
                 transform: `translate(
                     calc(${x}px - 50%),
@@ -204,14 +204,14 @@ export const SelectionTools = memo(({
                     </div>
 
                     {isFillableOrStrokable && (
-                        <div className="flex flex-col items-center pl-2 ml-2 border-l border-neutral-200 gap-x-0.5">
+                        <div className="flex flex-col items-center pl-2 ml-2 border-l border-border gap-x-0.5">
                             <Hint label="Thin">
                                 <Button
                                     onClick={() => setStrokeWidth(2)}
                                     variant="board"
                                     size="icon"
                                 >
-                                    <div className="w-4 bg-black rounded-full h-0.5" />
+                                    <div className="w-4 bg-foreground rounded-full h-0.5" />
                                 </Button>
                             </Hint>
                             <Hint label="Medium" side="left">
@@ -220,7 +220,7 @@ export const SelectionTools = memo(({
                                     variant="board"
                                     size="icon"
                                 >
-                                    <div className="w-4 bg-black rounded-full h-1" />
+                                    <div className="w-4 bg-foreground rounded-full h-1" />
                                 </Button>
                             </Hint>
                             <Hint label="Thick" side="bottom">
@@ -229,13 +229,13 @@ export const SelectionTools = memo(({
                                     variant="board"
                                     size="icon"
                                 >
-                                    <div className="w-4 bg-black rounded-full h-1.5" />
+                                    <div className="w-4 bg-foreground rounded-full h-1.5" />
                                 </Button>
                             </Hint>
                         </div>
                     )}
 
-                    <div className="flex items-center justify-center pl-2 ml-2 border-l border-neutral-200 flex-col gap-y-0.5">
+                    <div className="flex items-center justify-center pl-2 ml-2 border-l border-border flex-col gap-y-0.5">
                         <Hint label="Delete" side="bottom">
                             <Button
                                 variant={"board"}

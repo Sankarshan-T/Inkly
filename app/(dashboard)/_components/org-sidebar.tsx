@@ -19,7 +19,7 @@ export const OrgSidebar = () => {
     const searchParams = useSearchParams();
     const favorites = searchParams.get("favorites");
 
-    return(
+    return (
         <div className="hidden lg:flex flex-col space-y-6 w-51.5 pl-5 pr-5 pt-5 border-r-2">
             <Link href='/'>
                 <div className="flex items-center gap-x-2">
@@ -27,7 +27,7 @@ export const OrgSidebar = () => {
                         src="/logo.svg"
                         alt="logo"
                         height={40}
-                        width={40} 
+                        width={40}
                     />
                     <span className={cn(
                         "font-semibold text-2xl",
@@ -46,7 +46,9 @@ export const OrgSidebar = () => {
                             justifyContent: "center",
                             alignItems: "center",
                             width: "100%",
-                            height: "50px"
+                            height: "50px",
+                            color: "var(--primary)",
+                            backgroundColor: "var(--background)",
                         },
                         button: {
                             width: "100%",
@@ -57,12 +59,14 @@ export const OrgSidebar = () => {
                             padding: "6px",
                             width: "100%",
                             borderRadius: "8px",
-                            border: "1px solid #E5E7EB",
+                            border: "2px solid var(--border)",
                             justifyContent: "space-between",
-                            backgroundColor: "white",
+                            backgroundColor: "var(--background)",
+                            color: "var(--primary)",
                         },
                         organizationPreview: {
                             height: "100%",
+                            color: "var(--primary)",
                         },
                         organizationPreviewAvatarContainer: {
                             display: "flex",

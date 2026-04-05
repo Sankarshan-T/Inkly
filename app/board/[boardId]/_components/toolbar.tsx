@@ -69,7 +69,7 @@ const BG_CONFIG: Record<BackgroundMode, { name: string; class: string }> = {
     },
     isometric: {
         name: "Isometric",
-        class: "bg-white bg-[radial-gradient(#64748b_1.5px,transparent_1.5px),radial-gradient(#64748b_1.5px,transparent_1.5px)] bg-[size:30px_30px] [background-position:0_0,15px_15px]"
+        class: "bg-background bg-[radial-gradient(#64748b_1.5px,transparent_1.5px),radial-gradient(#64748b_1.5px,transparent_1.5px)] bg-[size:30px_30px] [background-position:0_0,15px_15px]"
     },
     blueprint: {
         name: "Blueprint",
@@ -81,7 +81,7 @@ const BG_CONFIG: Record<BackgroundMode, { name: string; class: string }> = {
     },
     graph: {
         name: "Graph",
-        class: "bg-white bg-[linear-gradient(#cbd5e1_1.5px,transparent_1.5px),linear-gradient(90deg,#cbd5e1_1.5px,transparent_1.5px),linear-gradient(#f1f5f9_1px,transparent_1px),linear-gradient(90deg,#f1f5f9_1px,transparent_1px)] bg-[size:100px_100px,100px_100px,20px_20px,20px_20px]"
+        class: "bg-background bg-[linear-gradient(#cbd5e1_1.5px,transparent_1.5px),linear-gradient(90deg,#cbd5e1_1.5px,transparent_1.5px),linear-gradient(#f1f5f9_1px,transparent_1px),linear-gradient(90deg,#f1f5f9_1px,transparent_1px)] bg-[size:100px_100px,100px_100px,20px_20px,20px_20px]"
     },
     carbon: {
         name: "Carbon",
@@ -97,7 +97,7 @@ const BG_CONFIG: Record<BackgroundMode, { name: string; class: string }> = {
     },
     notebook: {
         name: "Notebook",
-        class: "bg-white bg-[linear-gradient(90deg,transparent_79px,#ef4444_2px,transparent_81px),linear-gradient(#cbd5e1_1px,transparent_0)] bg-[size:100%_1.5em]"
+        class: "bg-background bg-[linear-gradient(90deg,transparent_79px,#ef4444_2px,transparent_81px),linear-gradient(#cbd5e1_1px,transparent_0)] bg-[size:100%_1.5em]"
     }
 };
 
@@ -116,7 +116,7 @@ export const Toolbar = ({
 
     return (
         <div className="absolute top-[50%] -translate-y-[50%] left-2 flex flex-col rounded-3xl gap-y-4">
-            <div className="p-1.5 flex gap-y-1 flex-col items-center bg-white/80 backdrop-blur-xs rounded-3xl border border-indigo-100 shadow-xl">
+            <div className="p-1.5 flex gap-y-1 flex-col items-center bg-card/80 backdrop-blur-xs rounded-3xl border border-border shadow-xl">
                 <ToolButton
                     label="Select"
                     icon={MousePointer2}
@@ -130,7 +130,7 @@ export const Toolbar = ({
                     }
                 />
 
-                <div className="h-px w-8 bg-neutral-900 my-1 " />
+                <div className="h-px w-8 bg-foreground my-1 " />
 
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -242,14 +242,14 @@ export const Toolbar = ({
                     </DropdownMenuContent>
                 </DropdownMenu>
 
-                <div className="h-px w-[80%] bg-neutral-900 my-1" />
+                <div className="h-px w-[80%] bg-foreground my-1" />
                 <ToolButton
                     label="Eraser"
                     icon={EraserIcon}
                     onClick={() => setCanvasState({ mode: CanvasMode.Erasing })}
                     isActive={canvasState.mode === CanvasMode.Erasing}
                 />
-                <div className="h-px w-[80%] bg-neutral-900 my-1" />
+                <div className="h-px w-[80%] bg-foreground my-1" />
 
                 <Dialog>
                     <DialogTrigger asChild>
@@ -259,10 +259,10 @@ export const Toolbar = ({
                             onClick={() => { }}
                         />
                     </DialogTrigger>
-                    <DialogContent className="max-w-2xl bg-white/95 backdrop-blur-xs border-indigo-100 shadow-2xl rounded-3xl">
+                    <DialogContent className="max-w-2xl bg-card/95 backdrop-blur-xs border-border shadow-2xl rounded-3xl">
                         <DialogHeader>
-                            <DialogTitle className="text-2xl font-bold text-indigo-950">Canvas Background</DialogTitle>
-                            <DialogDescription className="text-indigo-600/70">
+                            <DialogTitle className="text-2xl font-bold text-foreground">Canvas Background</DialogTitle>
+                            <DialogDescription className="text-primary/70">
                                 Select a pattern to change the look and feel of your whiteboard.
                             </DialogDescription>
                         </DialogHeader>
@@ -277,16 +277,16 @@ export const Toolbar = ({
                                 >
                                     <div className={`
                                         h-24 w-full rounded-xl border-2 transition-all relative overflow-hidden
-                                        ${bgMode === mode ? "border-indigo-600 shadow-md" : "border-neutral-200"}
+                                        ${bgMode === mode ? "border-primary shadow-md" : "border-border"}
                                         ${BG_CONFIG[mode].class}
                                     `}>
                                         {bgMode === mode && (
-                                            <div className="absolute inset-0 flex items-center justify-center bg-indigo-600/5">
-                                                <Check className="h-8 w-8 text-indigo-600 drop-shadow-sm" />
+                                            <div className="absolute inset-0 flex items-center justify-center bg-primary/5">
+                                                <Check className="h-8 w-8 text-primary drop-shadow-sm" />
                                             </div>
                                         )}
                                     </div>
-                                    <span className={`text-[10px] font-bold uppercase tracking-wider ${bgMode === mode ? "text-indigo-600" : "text-neutral-500"
+                                    <span className={`text-[10px] font-bold uppercase tracking-wider ${bgMode === mode ? "text-primary" : "text-muted-foreground"
                                         }`}>
                                         {BG_CONFIG[mode].name}
                                     </span>
@@ -297,7 +297,7 @@ export const Toolbar = ({
                 </Dialog>
             </div>
 
-            <div className="p-1.5 flex gap-y-1 flex-col items-center bg-white/80 backdrop-blur-xs rounded-3xl border border-indigo-100 shadow-xl">
+            <div className="p-1.5 flex gap-y-1 flex-col items-center bg-card/80 backdrop-blur-xs rounded-3xl border border-border shadow-xl">
                 <ToolButton
                     label="Undo"
                     icon={Undo2}
@@ -328,6 +328,6 @@ export const Toolbar = ({
 
 export const ToolbarSkeleton = () => {
     return (
-        <div className="absolute top-[50%] -translate-y-[50%] left-2 flex flex-col gap-y-4 bg-white h-112.5 w-14 shadow-xl rounded-3xl border border-neutral-200 animate-pulse" />
+        <div className="absolute top-[50%] -translate-y-[50%] left-2 flex flex-col gap-y-4 bg-card h-112.5 w-14 shadow-xl rounded-3xl border border-border animate-pulse" />
     );
 };

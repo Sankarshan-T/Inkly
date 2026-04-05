@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import ConvexClientProvider from "@/providers/convex-client-provider";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ModalProvider } from "@/providers/modal-provider";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,9 +39,16 @@ export default function RootLayout({
           },
         }}>
           <ConvexClientProvider>
-            <Toaster />
-            <ModalProvider />
-            {children}
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <Toaster />
+              <ModalProvider />
+              {children}
+            </ThemeProvider>
           </ConvexClientProvider>
         </ClerkProvider>
 

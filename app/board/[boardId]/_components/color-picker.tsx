@@ -19,7 +19,7 @@ export const ColorPicker = ({
     onChange,
 }: ColorPickerProps) => {
     return (
-        <div className="flex flex-wrap gap-2 items-center max-w-41 pr-2 mr-3 border-r border-neutral-200">
+        <div className="flex flex-wrap gap-2 items-center max-w-41 pr-2 mr-3 border-r border-border">
             <ColorButton color={{ r: 25, g: 114, b: 120 }} onClick={onChange} />
             <ColorButton color={{ r: 255, g: 202, b: 58 }} onClick={onChange} />
             <ColorButton color={{ r: 138, g: 201, b: 38 }} onClick={onChange} />
@@ -56,21 +56,21 @@ const CustomColorButton = ({
             <PopoverTrigger asChild>
                 <button className="w-8 h-8 items-center flex justify-center hover:opacity-75 transition">
                     <div
-                        className="h-8 w-8 rounded-md border border-neutral-300 flex items-center justify-center"
+                        className="h-8 w-8 rounded-md border border-border flex items-center justify-center"
                         style={{ backgroundColor: hex }}
                     >
-                        <Plus className="w-4 h-4 text-neutral-500 mix-blend-difference" />
+                        <Plus className="w-4 h-4 text-muted-foreground mix-blend-difference" />
                     </div>
                 </button>
             </PopoverTrigger>
-            <PopoverContent className="w-fit p-3 bg-white border-none shadow-xl">
+            <PopoverContent className="w-fit p-3 bg-card border-border shadow-xl">
                 <HexColorPicker color={hex} onChange={handleHexChange} />
                 <div className="mt-3 flex items-center gap-x-2">
                     <div
-                        className="w-4 h-4 rounded-sm border border-neutral-200"
+                        className="w-4 h-4 rounded-sm border border-border"
                         style={{ backgroundColor: hex }}
                     />
-                    <p className="text-xs font-mono uppercase text-neutral-500">
+                    <p className="text-xs font-mono uppercase text-muted-foreground">
                         {hex}
                     </p>
                 </div>
@@ -94,7 +94,7 @@ const ColorButton = ({
             onClick={() => onClick(color)}
         >
             <div
-                className="h-8 w-8 rounded-md border border-neutral-300"
+                className="h-8 w-8 rounded-md border border-border"
                 style={{ background: colorToCss(color) }}
             />
         </button>

@@ -25,7 +25,7 @@ export const Topbar = ({
 }: TopbarProps) => {
     return (
         <div className="absolute left-[50%] -translate-x-[50%] top-2 flex rounded-3xl gap-x-4">
-            <div className="p-1.5 flex gap-x-1 items-center bg-white/80 backdrop-blur-xs rounded-3xl border border-indigo-100 shadow-xl">
+            <div className="p-1.5 flex gap-x-1 items-center bg-card/80 backdrop-blur-xs rounded-3xl border border-border shadow-xl">
                 <ToolButton
                     side="bottom"
                     icon={Minus}
@@ -44,7 +44,7 @@ export const Topbar = ({
                     label="Zoom in"
                 />
             </div>
-            <div className="p-1.5 flex gap-x-1 items-center bg-white/80 backdrop-blur-xs rounded-3xl border border-indigo-100 shadow-xl">
+            <div className="p-1.5 flex gap-x-1 items-center bg-card/80 backdrop-blur-xs rounded-3xl border border-border shadow-xl">
                 <ToolButton
                     side="bottom"
                     icon={Image}
@@ -59,7 +59,7 @@ export const Topbar = ({
 export const TopbarSkeleton = () => {
     return (
         <div
-            className="absolute h-12 top-2 right-[50%] bg-white rounded-md p-3 flex items-center shadow-md w-25"
+            className="absolute h-12 top-2 right-[50%] bg-card rounded-md p-3 flex items-center shadow-md w-25"
         />
     );
 }

@@ -4,9 +4,9 @@ export const Overlay = () => {
         className="
           absolute
           inset-0
-          bg-black
+          bg-foreground
           opacity-0
-          group-hover:opacity-40
+          group-hover:opacity-20
           transition-opacity
           z-10
           w-full

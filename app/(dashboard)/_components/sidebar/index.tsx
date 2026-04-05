@@ -2,10 +2,10 @@ import { List } from "./list";
 import { NewButton } from "./new-button";
 
 export const Sidebar = () => {
-    return(
-        <aside className="fixed z-1 left-0 bg-blue-900 h-full w-15 flex p-3 flex-col gap-y-4 text-white">
+    return (
+        <aside className="fixed z-1 left-0 bg-primary h-full w-15 flex p-3 flex-col gap-y-4 text-primary-foreground">
             <List />
-            <NewButton />           
+            <NewButton />
         </aside>
     );
 };

@@ -3,11 +3,12 @@
 import { OrganizationSwitcher, UserButton, useAuth } from "@clerk/nextjs";
 import { SearchInput } from "./search-input";
 import { InviteButton } from "./invite-button";
+import { ModeToggle } from "@/components/ui/theme-toggle";
 
 export const Navbar = () => {
     const organization = useAuth();
 
-    return(
+    return (
         <div className="flex items-center gap-x-4 p-5">
             <div className="hidden lg:flex lg:flex-1">
                 <SearchInput />
@@ -34,9 +35,10 @@ export const Navbar = () => {
                                 padding: "6px",
                                 width: "100%",
                                 borderRadius: "8px",
-                                border: "1px solid #E5E7EB",
+                                border: "var(--border)",
                                 justifyContent: "space-between",
-                                backgroundColor: "white",
+                                backgroundColor: "var(--background)",
+                                color: "var(--primary)",
                             },
                             organizationPreview: {
                                 height: "100%",
@@ -64,8 +66,9 @@ export const Navbar = () => {
                     }}
                 />
             </div>
+            <ModeToggle />
             {organization && (<InviteButton />)}
-            <UserButton />           
+            <UserButton />
         </div>
     );
 };

@@ -26,6 +26,7 @@ import {
     Camera,
     EraserIcon,
     ImageIcon,
+    Keyboard,
 } from "lucide-react";
 
 import { ToolButton } from "./tool-button";
@@ -60,6 +61,41 @@ interface ToolbarProps {
     bgMode: BackgroundMode;
     setBgMode: (mode: BackgroundMode) => void;
 }
+
+const shortcutGroups = [
+    {
+        group: "System",
+        items: [
+            { key: "Ctrl + Z", label: "Undo" },
+            { key: "Ctrl + Y", label: "Redo" },
+            { key: "Ctrl + D", label: "Duplicate" },
+            { key: "Del", label: "Delete" },
+        ],
+    },
+    {
+        group: "Tools",
+        items: [
+            { key: "S", label: "Select Mode" },
+            { key: "K", label: "Pencil" },
+            { key: "L", label: "Line" },
+        ],
+    },
+    {
+        group: "Insert Shapes",
+        items: [
+            { key: "N", label: "Sticky Note" },
+            { key: "T", label: "Text" },
+            { key: "F", label: "LaTeX Formula" },
+            { key: "R", label: "Rectangle" },
+            { key: "E", label: "Ellipse" },
+            { key: "I", label: "Triangle" },
+            { key: "G", label: "Diamond" },
+            { key: "P", label: "Pentagon" },
+            { key: "H", label: "Hexagon" },
+            { key: "A", label: "Star" },
+        ],
+    },
+];
 
 const BG_CONFIG: Record<BackgroundMode, { name: string; class: string }> = {
     dots: {
@@ -257,7 +293,7 @@ export const Toolbar = ({
                 <Dialog>
                     <DialogTrigger asChild>
                         <ToolButton
-                            label="Canvas Background"
+                            label="Canvas Settings"
                             icon={Settings2}
                             onClick={() => { }}
                         />
@@ -312,6 +348,41 @@ export const Toolbar = ({
                                                 {BG_CONFIG[mode].name}
                                             </span>
                                         </button>
+                                    ))}
+                                </div>
+                            </DialogContent>
+                        </Dialog>
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Button variant={"ghost"}>
+                                    <Keyboard className="h-5 w-5" />
+                                    Hotkeys
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-md bg-background border-border">
+                                <DialogHeader>
+                                    <DialogTitle className="text-foreground">Keyboard Shortcuts</DialogTitle>
+                                </DialogHeader>
+                                <div className="grid gap-6 py-4">
+                                    {shortcutGroups.map((group) => (
+                                        <div key={group.group}>
+                                            <h4 className="text-xs font-bold text-muted-foreground mb-3 uppercase tracking-widest">
+                                                {group.group}
+                                            </h4>
+                                            <div className="grid grid-cols-2 gap-2">
+                                                {group.items.map((item) => (
+                                                    <div
+                                                        key={item.label}
+                                                        className="flex items-center justify-between p-2 rounded-md bg-secondary/50 border border-border/50"
+                                                    >
+                                                        <span className="text-sm text-foreground/80">{item.label}</span>
+                                                        <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground shadow-sm">
+                                                            {item.key}
+                                                        </kbd>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
                                     ))}
                                 </div>
                             </DialogContent>

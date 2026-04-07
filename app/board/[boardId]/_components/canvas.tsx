@@ -632,30 +632,57 @@ export const Canvas = ({
     useEffect(() => {
         function onKeyDown(e: KeyboardEvent) {
             if (isViewer) return;
-            const isTyping = (document.activeElement as HTMLElement)?.isContentEditable;
+
+            const isTyping = (document.activeElement as HTMLElement)?.isContentEditable ||
+                ["INPUT", "TEXTAREA"].includes(document.activeElement?.tagName || "");
             if (isTyping) return;
 
-            switch (e.key) {
-                case "Delete":
-                    deleteLayers();
-                    break;
-                case "z":
-                    if (e.ctrlKey || e.metaKey) {
-                        if (e.shiftKey) history.redo();
-                        else history.undo();
-                    }
-                    break;
-                case "d":
-                    if (e.ctrlKey || e.metaKey) {
+            const isMod = e.ctrlKey || e.metaKey;
+            const key = e.key.toLowerCase();
+
+            if (isMod) {
+                switch (key) {
+                    case "z":
+                        e.preventDefault();
+                        history.undo();
+                        return;
+                    case "y":
+                        e.preventDefault();
+                        history.redo()
+                        return;
+                    case "d":
                         e.preventDefault();
                         duplicateLayers();
-                    }
-                    break;
+                        return;
+                }
+            }
+
+            const toolMap: Record<string, () => void> = {
+                "delete": () => deleteLayers(),
+                "s": () => setCanvasState({ mode: CanvasMode.None }),
+                "k": () => setCanvasState({ mode: CanvasMode.Pencil }),
+                "l": () => setCanvasState({ mode: CanvasMode.Line }),
+                "n": () => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.Note }),
+                "t": () => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.Text }),
+                "f": () => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.LatexText }),
+                "r": () => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.Rectangle }),
+                "e": () => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.Ellipse }),
+                "i": () => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.Triangle }),
+                "g": () => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.Diamond }),
+                "p": () => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.Pentagon }),
+                "h": () => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.Hexagon }),
+                "a": () => setCanvasState({ mode: CanvasMode.Inserting, layerType: LayerType.Star }),
+            };
+
+            if (toolMap[key]) {
+                e.preventDefault();
+                toolMap[key]();
             }
         }
+
         window.addEventListener("keydown", onKeyDown);
         return () => window.removeEventListener("keydown", onKeyDown);
-    }, [deleteLayers, history, isViewer, duplicateLayers]);
+    }, [deleteLayers, history, isViewer, duplicateLayers, setCanvasState]);
 
     const exportToPng = async () => {
         if (!svgRef.current) return;

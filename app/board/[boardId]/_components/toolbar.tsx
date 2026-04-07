@@ -25,6 +25,7 @@ import {
     Pentagon,
     Camera,
     EraserIcon,
+    ImageIcon,
 } from "lucide-react";
 
 import { ToolButton } from "./tool-button";
@@ -46,6 +47,8 @@ import {
     DropdownMenuContent,
     DropdownMenuItem
 } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { ModeToggle } from "@/components/ui/theme-toggle";
 
 interface ToolbarProps {
     canvasState: CanvasState;
@@ -259,43 +262,71 @@ export const Toolbar = ({
                             onClick={() => { }}
                         />
                     </DialogTrigger>
-                    <DialogContent className="max-w-2xl bg-card/95 backdrop-blur-xs border-border shadow-2xl rounded-3xl">
+                    <DialogContent>
                         <DialogHeader>
-                            <DialogTitle className="text-2xl font-bold text-foreground">Canvas Background</DialogTitle>
+                            <DialogTitle className="text-2xl font-bold text-foreground">Canvas Settings</DialogTitle>
                             <DialogDescription className="text-primary/70">
-                                Select a pattern to change the look and feel of your whiteboard.
+                                Change the settings of your canvas
                             </DialogDescription>
                         </DialogHeader>
-
-                        <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 py-4">
-                            {(Object.keys(BG_CONFIG) as BackgroundMode[]).map((mode) => (
-                                <button
-                                    key={mode}
-                                    onClick={() => setBgMode(mode)}
-                                    className={`group flex flex-col items-center gap-y-2 p-1 transition-all rounded-xl ${bgMode === mode ? "scale-105" : "opacity-70 hover:opacity-100"
-                                        }`}
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Button
+                                    onClick={() => { }}
+                                    variant={"ghost"}
                                 >
-                                    <div className={`
+                                    <ImageIcon />
+                                    Canvas Background
+                                </Button>
+                            </DialogTrigger>
+
+                            <DialogContent className="max-w-2xl bg-card/95 backdrop-blur-xs border-border shadow-2xl rounded-3xl">
+                                <DialogHeader>
+                                    <DialogTitle className="text-2xl font-bold text-foreground">Canvas Background</DialogTitle>
+                                    <DialogDescription className="text-primary/70">
+                                        Select a pattern to change the look and feel of your whiteboard.
+                                    </DialogDescription>
+                                </DialogHeader>
+
+                                <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 py-4">
+                                    {(Object.keys(BG_CONFIG) as BackgroundMode[]).map((mode) => (
+                                        <button
+                                            key={mode}
+                                            onClick={() => setBgMode(mode)}
+                                            className={`group flex flex-col items-center gap-y-2 p-1 transition-all rounded-xl ${bgMode === mode ? "scale-105" : "opacity-70 hover:opacity-100"
+                                                }`}
+                                        >
+                                            <div className={`
                                         h-24 w-full rounded-xl border-2 transition-all relative overflow-hidden
                                         ${bgMode === mode ? "border-primary shadow-md" : "border-border"}
                                         ${BG_CONFIG[mode].class}
                                     `}>
-                                        {bgMode === mode && (
-                                            <div className="absolute inset-0 flex items-center justify-center bg-primary/5">
-                                                <Check className="h-8 w-8 text-primary drop-shadow-sm" />
+                                                {bgMode === mode && (
+                                                    <div className="absolute inset-0 flex items-center justify-center bg-primary/5">
+                                                        <Check className="h-8 w-8 text-primary drop-shadow-sm" />
+                                                    </div>
+                                                )}
                                             </div>
-                                        )}
-                                    </div>
-                                    <span className={`text-[10px] font-bold uppercase tracking-wider ${bgMode === mode ? "text-primary" : "text-muted-foreground"
-                                        }`}>
-                                        {BG_CONFIG[mode].name}
-                                    </span>
-                                </button>
-                            ))}
-                        </div>
+                                            <span className={`text-[10px] font-bold uppercase tracking-wider ${bgMode === mode ? "text-primary" : "text-muted-foreground"
+                                                }`}>
+                                                {BG_CONFIG[mode].name}
+                                            </span>
+                                        </button>
+                                    ))}
+                                </div>
+                            </DialogContent>
+                        </Dialog>
+                        <Button
+                            variant={"ghost"}
+                        >
+                            <ModeToggle />
+                            Theme
+                        </Button>
                     </DialogContent>
+
                 </Dialog>
-            </div>
+
+            </div >
 
             <div className="p-1.5 flex gap-y-1 flex-col items-center bg-card/80 backdrop-blur-xs rounded-3xl border border-border shadow-xl">
                 <ToolButton
@@ -322,7 +353,7 @@ export const Toolbar = ({
                     />
                 </ConfirmationBox>
             </div>
-        </div>
+        </div >
     );
 };
 

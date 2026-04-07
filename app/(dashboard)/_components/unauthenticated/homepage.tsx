@@ -5,7 +5,7 @@ import Typewriter from 'typewriter-effect';
 
 export const HomePage = () => {
     return (
-        <div className="min-h-screen w-full flex flex-col bg-background bg-[radial-gradient(#e5e7eb_4px,transparent_5px)] bg-size-[30px_30px] touch-none overflow-y-auto scroll-smooth">
+        <div className="min-h-screen w-full flex flex-col bg-background touch-none overflow-y-auto scroll-smooth">
             <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 h-18 w-[90%] max-w-6xl rounded-2xl bg-primary backdrop-blur-xs flex items-center justify-between px-8 text-primary-foreground shadow-xl">
 
                 <div className="text-4xl font-bold flex items-center gap-3 tracking-tight">

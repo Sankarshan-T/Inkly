@@ -847,7 +847,7 @@ export const Canvas = ({
                             </g>
                         )}
 
-                    {layerIds?.map((layerId) => (
+                    {Array.from(layerIds || []).map((layerId) => (
                         <LayerPreview
                             key={layerId}
                             id={layerId}

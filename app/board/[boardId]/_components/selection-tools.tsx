@@ -238,7 +238,7 @@ export const SelectionTools = memo(({
                     <div className="flex items-center justify-center pl-2 ml-2 border-l border-border flex-col gap-y-0.5">
                         <Hint label="Delete" side="bottom">
                             <Button
-                                variant={"board"}
+                                variant={"boardDestructive"}
                                 size={"icon"}
                                 onClick={deleteLayers}
                             >

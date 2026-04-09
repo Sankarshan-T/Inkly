@@ -19,12 +19,12 @@ export const UserAvatar = ({
     borderColor,
 }: UserAvatarProps) => {
     return (
-        <Hint label={name || "Teammate"} side="bottom" sideOffset={18}>
+        <Hint label={name || "Teammate"} side="bottom" sideOffset={13}>
             <Avatar
                 className="h-8 w-8 border-3"
                 style={{ borderColor }}
             >
-                <AvatarImage src={src} draggable={false} className="select-none pointer-events-none"/>
+                <AvatarImage src={src} draggable={false} className="select-none pointer-events-none" />
                 <AvatarFallback className="text-xs font-semibold">
                     {fallback}
                 </AvatarFallback>

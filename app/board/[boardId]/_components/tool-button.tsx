@@ -10,7 +10,7 @@ interface ToolButtonProps {
     onClick: () => void;
     isActive?: boolean;
     isDisabled?: boolean;
-    side?: "bottom" | "right"
+    side?: "bottom" | "right";
 }
 
 export const ToolButton = ({

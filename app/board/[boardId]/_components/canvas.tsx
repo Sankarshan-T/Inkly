@@ -5,6 +5,7 @@ import { Info } from "./info";
 import { nanoid } from "nanoid";
 import { Topbar } from "./topbar";
 import { Toolbar } from "./toolbar";
+import { toPng } from 'html-to-image';
 import { Participants } from "./participants";
 import { SelectionBox } from "./selection-box";
 import { LayerPreview } from "./layer-preview";
@@ -52,7 +53,6 @@ import {
     XYWH,
     BackgroundMode
 } from "@/types/canvas";
-import { toPng } from 'html-to-image';
 
 const MAX_LAYERS = 1000;
 

@@ -59,31 +59,31 @@ export const HomePage = () => {
                 </div>
             </section>
 
-            <section id="features" className="h-screen w-full flex flex-col gap-y-10 items-center justify-center bg-background py-20 px-20">
+            <section id="features" className="min-h-screen w-full flex flex-col gap-y-10 items-center justify-center bg-background py-20 px-6 md:px-20">
                 <h2 className="text-4xl font-bold text-foreground text-center mt-10">Features</h2>
                 <p className="text-foreground text-center">These features will be unlocked after signing in. Sign In now, and get started!</p>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {/* 1 */}
-                    <div className="p-8 rounded-3xl bg-card border border-primary/20 shadow-sm hover:shadow-md transition-shadow group">
-                        <div className="h-12 w-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl">
+                    {/* 1*/}
+                    <div className="p-8 rounded-3xl bg-card border border-blue-500/20 shadow-sm hover:shadow-md transition-shadow group">
+                        <div className="h-12 w-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-500 mb-6 group-hover:bg-blue-500 group-hover:text-white transition-colors">
                             <User size={24} />
                         </div>
                         <h3 className="text-xl font-bold text-foreground mb-2">Real-time Collaboration</h3>
                         <p className="text-foreground/70">Invite your team and work together with instant syncing.</p>
                     </div>
 
-                    {/* 2 */}
-                    <div className="p-8 rounded-3xl bg-card border border-destructive/20 shadow-sm hover:shadow-md transition-shadow group">
-                        <div className="h-12 w-12 bg-destructive/10 rounded-2xl flex items-center justify-center text-destructive mb-6 group-hover:bg-destructive group-hover:text-destructive/90 transition-colors">
+                    {/* 2  */}
+                    <div className="p-8 rounded-3xl bg-card border border-rose-500/20 shadow-sm hover:shadow-md transition-shadow group">
+                        <div className="h-12 w-12 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-500 mb-6 group-hover:bg-rose-500 group-hover:text-white transition-colors">
                             <PencilLine size={24} />
                         </div>
                         <h3 className="text-xl font-bold text-foreground mb-2">Various Elements</h3>
                         <p className="text-foreground/70">Add a variety of objects to your board like textboxes, rectangles, drawings and more!</p>
                     </div>
 
-                    {/* 3 */}
-                    <div className="p-8 rounded-3xl bg-card border border-secondary/20 shadow-sm hover:shadow-md transition-shadow group">
-                        <div className="h-12 w-12 bg-secondary/10 rounded-2xl flex items-center justify-center text-secondary mb-6 group-hover:bg-secondary group-hover:text-secondary-foreground transition-colors">
+                    {/* 3  */}
+                    <div className="p-8 rounded-3xl bg-card border border-amber-500/20 shadow-sm hover:shadow-md transition-shadow group">
+                        <div className="h-12 w-12 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-500 mb-6 group-hover:bg-amber-500 group-hover:text-white transition-colors">
                             <MousePointer2 size={24} />
                         </div>
                         <h3 className="text-xl font-bold text-foreground mb-2">Live Previews and Tracking</h3>
@@ -91,8 +91,8 @@ export const HomePage = () => {
                     </div>
 
                     {/* 4 */}
-                    <div className="p-8 rounded-3xl bg-card border border-accent/20 shadow-sm hover:shadow-md transition-shadow group">
-                        <div className="h-12 w-12 bg-accent/10 rounded-2xl flex items-center justify-center text-accent mb-6 group-hover:bg-accent group-hover:text-accent-foreground transition-colors">
+                    <div className="p-8 rounded-3xl bg-card border border-emerald-500/20 shadow-sm hover:shadow-md transition-shadow group">
+                        <div className="h-12 w-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-500 mb-6 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
                             <Globe size={24} />
                         </div>
                         <h3 className="text-xl font-bold text-foreground mb-2">Organizations</h3>
@@ -100,28 +100,25 @@ export const HomePage = () => {
                     </div>
 
                     {/* 5 */}
-                    <div className="p-8 rounded-3xl bg-card border border-primary/20 shadow-sm hover:shadow-md transition-shadow group">
-                        <div className="h-12 w-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <div className="p-8 rounded-3xl bg-card border border-violet-500/20 shadow-sm hover:shadow-md transition-shadow group">
+                        <div className="h-12 w-12 bg-violet-50 rounded-2xl flex items-center justify-center text-violet-500 mb-6 group-hover:bg-violet-500 group-hover:text-white transition-colors">
                             <Stars size={24} />
                         </div>
                         <h3 className="text-xl font-bold text-foreground mb-2">Favorites</h3>
                         <p className="text-foreground/70">Add boards to your favorites to access them with ease.</p>
                     </div>
 
-                    {/* 6 */}
-                    <div className="p-8 rounded-3xl bg-card border border-primary/20 shadow-sm hover:shadow-md transition-shadow group">
-                        <div className="h-12 w-12 bg-cyan-100 rounded-2xl flex items-center justify-center text-cyan-600 mb-6 group-hover:bg-cyan-600 group-hover:text-primary transition-colors">
+                    {/* 6  */}
+                    <div className="p-8 rounded-3xl bg-card border border-cyan-500/20 shadow-sm hover:shadow-md transition-shadow group">
+                        <div className="h-12 w-12 bg-cyan-50 rounded-2xl flex items-center justify-center text-cyan-500 mb-6 group-hover:bg-cyan-500 group-hover:text-white transition-colors">
                             <Layers size={24} />
                         </div>
-                        <h3 className="text-xl font-bold text-cyan-950 mb-2">Layers</h3>
-                        <p className="text-cyan-800/70">With many layers in the board, control the z-index any layer! Sign In now, and get started!</p>
+                        <h3 className="text-xl font-bold text-foreground mb-2">Layers</h3>
+                        <p className="text-foreground/70">With many layers in the board, control the z-index any layer! Sign In now, and get started!</p>
                     </div>
                 </div>
             </section>
 
-            <footer className="w-full py-10 text-center text-foreground/30 font-medium bg-card">
-                © 2026 Inkly. All doodles reserved. Made with 💖 by CoolCream
-            </footer>
         </div>
     )
 }
